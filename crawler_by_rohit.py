@@ -1,12 +1,14 @@
 import json
 import requests
 from bs4 import BeautifulSoup
-import time
 import logging
 import os
 from urllib.parse import urljoin, urlparse
 from dotenv import load_dotenv
 from openai import OpenAI
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import multiprocessing
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -32,27 +34,28 @@ def is_allowed(url, user_agent='MyFireNewsCrawler/1.0'):
     except:
         return False
 
-def crawl_website(url):
+def crawl_website(url, processed_urls):
+    article_links = []
     try:
         headers = {'User-Agent': 'MyFireNewsCrawler/1.0'}
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         soup = BeautifulSoup(response.content, 'html.parser')
-        article_links = []
         for link in soup.find_all('a', href=True):
             href = link['href']
             full_url = href if href.startswith('http') else urljoin(url, href)
             parsed_full_url = urlparse(full_url)
             normalized_url = parsed_full_url.scheme + '://' + parsed_full_url.netloc + parsed_full_url.path
-            if any(keyword in normalized_url.lower() for keyword in fire_keywords):
-                if normalized_url not in article_links:
-                    article_links.append(normalized_url)
-        return article_links
-    except:
-        return []
+            if normalized_url not in processed_urls and any(keyword in normalized_url.lower() for keyword in fire_keywords):
+                article_links.append(normalized_url)
+                processed_urls[normalized_url] = True 
+    except Exception as e:
+        logging.error(f"Error crawling {url}: {str(e)}")
+    return article_links
 
 def extract_article_details(article_url):
     try:
+        
         headers = {'User-Agent': 'MyFireNewsCrawler/1.0'}
         response = requests.get(article_url, headers=headers)
         response.raise_for_status()
@@ -65,10 +68,30 @@ def extract_article_details(article_url):
             return None, None, None
         max_content_length = 2000
         truncated_content = content[:max_content_length]
+        yesterday_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
         messages = [
-            {"role": "system", "content": "You are an AI that summarizes news articles."},
-            {"role": "user", "content": f"Title: {title}\n\nContent: {truncated_content}\n\nSummarize this article in a few sentences."}
+            {
+                "role": "system",
+                "content": (
+                    "You are an AI tasked with determining if a news article describes a specific fire incident. "
+                    "The article must involve accidental or unintended fires affecting homes, houses, apartments, buildings, or people. "
+                    "These may include fires caused by electrical faults, negligence, accidents, or natural causes (e.g., forest fires reaching homes). "
+                    "Explicitly exclude articles about wars, ceasefires, political events, fundraising campaigns, ceremonial events, or unrelated activities. "
+                    f"Additionally, only consider articles that were posted or modified {yesterday_date}. Articles older than {yesterday_date} should be excluded."
+                    "Respond only if the content directly involves a fire-related accident as described above. "
+                    "Your response must strictly have 'Yes' or 'No' followed by the summary."
+                )
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Title: {title}\n\nContent: {truncated_content}\n\n"
+                    "Does this article describe an accidental fire incident affecting homes, buildings, or people as defined above, "
+                    "Respond only with 'Yes' or 'No'."
+                )
+            }
         ]
+
         ai_response = client.chat.completions.create(
             model='gpt-4o-mini',
             messages=messages,
@@ -79,7 +102,8 @@ def extract_article_details(article_url):
         )
         summary = ai_response.choices[0].message.content.strip()
         return title, summary, article_url
-    except:
+    except Exception as e:
+        logging.error(f"Error extracting details for {article_url}: {str(e)}")
         return None, None, None
 
 def load_cleaned_websites():
@@ -87,36 +111,60 @@ def load_cleaned_websites():
         with open('cleaned_websites.json', 'r', encoding='utf-8') as f:
             data = json.load(f)
             return [entry['url'] for entry in data if 'url' in entry]
-    except:
+    except Exception as e:
+        logging.error(f"Error loading websites: {str(e)}")
         return []
 
-def save_to_file(article):
+def save_articles_to_file(articles):
     try:
-        if not os.path.exists('confirmed_fire_articles_live.json'):
-            with open('confirmed_fire_articles_live.json', 'w', encoding='utf-8') as f:
-                json.dump([article], f, ensure_ascii=False, indent=4)
+        if not os.path.exists('final_result'):
+            os.makedirs('final_result')
+
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        file_path = os.path.join('final_result', f'confirmed_fire_articles_{current_date}.json')
+
+        if articles:
+            with open(file_path, 'w', encoding='utf-8') as f:
+                json.dump(articles, f, ensure_ascii=False, indent=4)
+                logging.info(f"Saved {len(articles)} articles to {file_path}")
         else:
-            with open('confirmed_fire_articles_live.json', 'r+', encoding='utf-8') as f:
-                data = json.load(f)
-                data.append(article)
-                f.seek(0)
-                json.dump(data, f, ensure_ascii=False, indent=4)
-    except:
-        pass
+            logging.info("No articles to save.")
+    except Exception as e:
+        logging.error(f"Error saving to file: {str(e)}")
+
+def process_article_url(article_url, articles):
+    title, summary, url = extract_article_details(article_url)
+    if summary.startswith("Yes") and title and url:
+        short_summary = summary[4:].strip()  
+        article = {"title": title, "summary": short_summary, "url": url}
+        articles.append(article)
+    else:
+        logging.info(f"Irrelevant article skipped: {title or 'No Title'} - {url}")
+
+
+def process_website(website_url, articles, processed_urls):
+    article_urls = crawl_website(website_url, processed_urls)
+    for article_url in article_urls:
+        process_article_url(article_url, articles)
 
 def main():
+    manager = multiprocessing.Manager()
+    articles = manager.list()
+    processed_urls = manager.dict()
     urls = load_cleaned_websites()
-    for website in urls:
-        article_urls = crawl_website(website)
-        time.sleep(2)
-        for article_url in article_urls:
-            if not is_allowed(article_url):
-                continue
-            title, summary, url = extract_article_details(article_url)
-            if title and summary:
-                article = {"website": website, "title": title, "summary": summary, "url": url}
-                save_to_file(article)
-            time.sleep(1)
+
+    with ThreadPoolExecutor(max_workers=multiprocessing.cpu_count() * 2) as executor:
+        futures = [executor.submit(process_website, website, articles, processed_urls) for website in urls]
+
+        for future in as_completed(futures):
+            try:
+                future.result()
+            except Exception as e:
+                logging.error(f"Error processing website: {str(e)}")
+
+    save_articles_to_file(list(articles))
 
 if __name__ == "__main__":
+    start_time = datetime.now()
     main()
+    logging.info(f"Processing completed in {datetime.now() - start_time}")
