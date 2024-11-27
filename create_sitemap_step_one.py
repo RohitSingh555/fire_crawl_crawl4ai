@@ -3,13 +3,16 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 import datetime
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
 
 INPUT_FILE = "websites.txt"
 CRAWLED_URLS = set()
+CRAWLED_URLS_LOCK = threading.Lock()  # To prevent race conditions
 SKIPPED_URLS = set()
 CRAWLED_FILE = "crawled_websites.txt"
 JSON_FILE = "crawled_websites.json"
-MAX_PAGES_PER_WEBSITE = 200
+MAX_PAGES_PER_WEBSITE = 500
 
 FIRE_KEYWORDS = ["fire", "burn", "wildfire", "firefighter", "blaze", "inferno", "firefighting", "firestorm", "flames", "arson", "smoke"]
 website_url_counter = {}
@@ -53,11 +56,15 @@ def is_valid_link(url, base_url):
 
 def crawl(url):
     website = urlparse(url).netloc
-    if website_url_counter.get(website, 0) >= MAX_PAGES_PER_WEBSITE:
-        return
-    normalized_url = normalize_url(url)
-    if normalized_url in CRAWLED_URLS or normalized_url in SKIPPED_URLS:
-        return
+    with CRAWLED_URLS_LOCK:
+        if website_url_counter.get(website, 0) >= MAX_PAGES_PER_WEBSITE:
+            return
+        normalized_url = normalize_url(url)
+        if normalized_url in CRAWLED_URLS or normalized_url in SKIPPED_URLS:
+            return
+        CRAWLED_URLS.add(normalized_url)
+        website_url_counter[website] = website_url_counter.get(website, 0) + 1
+
     try:
         response = requests.get(url, timeout=10)
         last_modified = response.headers.get("Last-Modified")
@@ -66,15 +73,13 @@ def crawl(url):
         else:
             last_modified_date = None
 
-        CRAWLED_URLS.add(normalized_url)
-        website_url_counter[website] = website_url_counter.get(website, 0) + 1
         save_crawled_url(normalized_url, website, last_modified_date)
         links = get_links(url)
-        for link in links:
-            crawl(link)
+        return links  # Return links for further crawling
     except Exception as e:
         log(f"Error crawling {url}: {e}")
-        SKIPPED_URLS.add(normalized_url)
+        SKIPPED_URLS.add(normalize_url(url))
+        return []
 
 def save_crawled_url(url, website, last_modified_date):
     global crawled_data
@@ -98,12 +103,28 @@ def save_to_json():
     except Exception as e:
         log(f"Error saving to JSON file: {e}")
 
+def threaded_crawl(initial_urls):
+    with ThreadPoolExecutor() as executor:
+        future_to_url = {executor.submit(crawl, url): url for url in initial_urls}
+        while future_to_url:
+            for future in as_completed(future_to_url):
+                try:
+                    links = future.result()
+                    if links:
+                        # Submit new links for crawling
+                        for link in links:
+                            if link not in CRAWLED_URLS and link not in SKIPPED_URLS:
+                                future_to_url[executor.submit(crawl, link)] = link
+                except Exception as e:
+                    log(f"Error in threaded crawl: {e}")
+                finally:
+                    del future_to_url[future]
+
 if __name__ == "__main__":
     try:
         with open(INPUT_FILE, "r", encoding="utf-8") as file:
             initial_urls = [normalize_url(line.strip()) for line in file.readlines()]
-        for url in initial_urls:
-            crawl(url)
+        threaded_crawl(initial_urls)
     except FileNotFoundError:
         log("Input file not found.")
     except Exception as e:

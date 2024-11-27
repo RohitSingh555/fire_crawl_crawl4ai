@@ -1,8 +1,10 @@
 import json
+import os
 import requests
 import re
 from bs4 import BeautifulSoup
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 INPUT_FILE = "crawled_websites.json"
 OUTPUT_FILE = "updated_crawled_websites.json"
@@ -90,19 +92,35 @@ def get_best_date(url):
 
     return "Not Available"
 
+def process_url(entry):
+    try:
+        url = entry["url"]
+        if entry["last_modified"] is None:
+            print(f"Fetching date for: {url}")
+            best_date = get_best_date(url)
+            entry["last_modified"] = best_date
+    except Exception as e:
+        print(f"Error processing URL {entry['url']}: {e}")
+    return entry
+
 def update_last_modified(json_file, output_file):
     try:
         with open(json_file, "r", encoding="utf-8") as file:
             data = json.load(file)
 
-        for entry in data:
-            if entry["last_modified"] is None: 
-                print(f"Fetching date for: {entry['url']}")
-                best_date = get_best_date(entry["url"])
-                entry["last_modified"] = best_date
+        updated_data = []
+        max_threads = os.cpu_count() * 2 
+        with ThreadPoolExecutor(max_workers=max_threads) as executor:
+            futures = {executor.submit(process_url, entry): entry for entry in data}
+            for future in as_completed(futures):
+                try:
+                    updated_entry = future.result()
+                    updated_data.append(updated_entry)
+                except Exception as e:
+                    print(f"Error in thread execution: {e}")
 
         with open(output_file, "w", encoding="utf-8") as file:
-            json.dump(data, file, indent=4)
+            json.dump(updated_data, file, indent=4)
         print(f"Updated JSON saved to: {output_file}")
     except Exception as e:
         print(f"Error processing JSON file: {e}")
