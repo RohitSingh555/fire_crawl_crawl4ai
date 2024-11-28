@@ -2,10 +2,10 @@
     {
         "url": "https://www.azfamily.com",
         "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T11:59:37"
+        "last_modified": "2024-11-27T19:05:34"
     },
     {
-        "url": "https://www.wdsu.com",
+        "url": "https://www.wdsu.com/local-news",
         "website": "www.wdsu.com",
         "last_modified": "2024-11-26T00:00:00"
     },
@@ -15,12 +15,92 @@
         "last_modified": "2024-11-24T00:00:00"
     },
     {
+        "url": "https://www.wdsu.com/",
+        "website": "www.wdsu.com",
+        "last_modified": "2024-11-27T00:00:00"
+    },
+    {
+        "url": "https://www.wdsu.com/article/several-people-displaced-after-large-fire-ignites-overnight-in-mid-city/63031091",
+        "website": "www.wdsu.com",
+        "last_modified": "2024-11-27T18:38:00Z"
+    },
+    {
         "url": "https://kion546.com",
         "website": "kion546.com",
         "last_modified": "2024-11-26"
     },
     {
-        "url": "https://kion546.com/category/news/education/",
+        "url": "https://www.azfamily.com/video-gallery/news",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T18:55:26"
+    },
+    {
+        "url": "https://www.azfamily.com/news",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:03:41"
+    },
+    {
+        "url": "https://www.azfamily.com/news/phoenix",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:05:49"
+    },
+    {
+        "url": "https://www.azfamily.com/news/housing",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:05:12"
+    },
+    {
+        "url": "https://www.azfamily.com/news/west-valley",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:06:29"
+    },
+    {
+        "url": "https://www.azfamily.com/news/east-valley",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:06:18"
+    },
+    {
+        "url": "https://www.azfamily.com/news/wildfires",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T18:57:50"
+    },
+    {
+        "url": "https://www.azfamily.com/news/investigates",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:06:31"
+    },
+    {
+        "url": "https://www.azfamily.com/news/national",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:03:51"
+    },
+    {
+        "url": "https://www.azfamily.com/newsletter",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:05:37"
+    },
+    {
+        "url": "https://www.azfamily.com/news/border",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:00:34"
+    },
+    {
+        "url": "https://www.azfamily.com/news/n-arizona",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:02:28"
+    },
+    {
+        "url": "https://www.azfamily.com/news/technology",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:06:56"
+    },
+    {
+        "url": "https://www.azfamily.com/news/yuma",
+        "website": "www.azfamily.com",
+        "last_modified": "2024-11-27T19:06:56"
+    },
+    {
+        "url": "https://kion546.com/category/news/california/",
         "website": "kion546.com",
         "last_modified": "2024-11-26"
     },
@@ -30,79 +110,9 @@
         "last_modified": "2024-11-26"
     },
     {
-        "url": "https://www.azfamily.com/news/national",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T11:46:23"
-    },
-    {
-        "url": "https://www.azfamily.com/news/east-valley",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T11:47:27"
-    },
-    {
-        "url": "https://www.azfamily.com/news",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T12:00:17"
-    },
-    {
-        "url": "https://www.azfamily.com/news/wildfires",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T11:47:10"
-    },
-    {
-        "url": "https://www.azfamily.com/news/west-valley",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T11:49:06"
-    },
-    {
-        "url": "https://www.azfamily.com/news/phoenix",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T11:47:07"
-    },
-    {
-        "url": "https://www.azfamily.com/news/technology",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T11:58:53"
-    },
-    {
-        "url": "https://www.azfamily.com/news/yuma",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T11:45:57"
-    },
-    {
-        "url": "https://www.azfamily.com/video-gallery/news/",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T11:47:08"
-    },
-    {
-        "url": "https://www.azfamily.com/news/housing",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T12:00:18"
-    },
-    {
-        "url": "https://www.azfamily.com/news/border",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T11:47:37"
-    },
-    {
-        "url": "https://www.azfamily.com/news/investigates",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T11:46:30"
-    },
-    {
-        "url": "https://www.azfamily.com/news/n-arizona",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T12:00:18"
-    },
-    {
-        "url": "https://kion546.com/category/news/california/",
+        "url": "https://kion546.com/category/news/education/",
         "website": "kion546.com",
         "last_modified": "2024-11-26"
-    },
-    {
-        "url": "https://www.azfamily.com/newsletter",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-11-27T12:00:11"
     },
     {
         "url": "https://www.wdsu.com/article/dog-saved-from-house-fire-meets-her-heroes/62998903",
@@ -110,24 +120,24 @@
         "last_modified": "2024-11-24T13:09:00Z"
     },
     {
-        "url": "https://kion546.com/category/news/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-27"
-    },
-    {
         "url": "https://kion546.com/author/cnn-newsource/",
         "website": "kion546.com",
         "last_modified": "2024-11-27"
     },
     {
-        "url": "https://kion546.com/category/news/salinas/",
+        "url": "https://kion546.com/category/news/",
         "website": "kion546.com",
-        "last_modified": "2024-11-25"
+        "last_modified": "2024-11-27"
     },
     {
         "url": "https://kion546.com/news/top-stories/2024/11/21/multiple-fire-agencies-responding-to-a-fire-in-the-riverbed-near-san-lorenzo-park/",
         "website": "kion546.com",
         "last_modified": "2024-11-21"
+    },
+    {
+        "url": "https://kion546.com/category/news/salinas/",
+        "website": "kion546.com",
+        "last_modified": "2024-11-25"
     },
     {
         "url": "https://kion546.com/news/2024/11/21/semi-trailer-catches-fire-thursday-morning-prompting-the-state-park-dr-off-ramp-to-close-now-reopened-chp/",
@@ -140,19 +150,19 @@
         "last_modified": "2024-11-27"
     },
     {
-        "url": "https://kion546.com/news/national-world/cnn-national/2024/11/26/animal-rescue-pilot-and-dog-killed-in-plane-crash-in-new-york-mountains-2-dogs-survive/",
+        "url": "https://kion546.com/category/news/top-stories/",
         "website": "kion546.com",
         "last_modified": "2024-11-26"
+    },
+    {
+        "url": "https://kion546.com/news/2024/11/27/setbacks-for-santa-cruz-county-fire-districts-as-only-one-of-three-bond-measures-passes/",
+        "website": "kion546.com",
+        "last_modified": "2024-11-27"
     },
     {
         "url": "https://kion546.com/category/news/page/2/",
         "website": "kion546.com",
-        "last_modified": "2024-11-26"
-    },
-    {
-        "url": "https://kion546.com/category/news/top-stories/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-26"
+        "last_modified": "2024-11-27"
     },
     {
         "url": "https://kion546.com/category/news/seaside/",
@@ -165,13 +175,33 @@
         "last_modified": "2024-11-26"
     },
     {
-        "url": "http://www.wdsu.com/",
-        "website": "www.wdsu.com",
-        "last_modified": "2024-11-26T00:00:00"
+        "url": "https://kion546.com/news/national-world/cnn-national/2024/11/26/animal-rescue-pilot-and-dog-killed-in-plane-crash-in-new-york-mountains-2-dogs-survive/",
+        "website": "kion546.com",
+        "last_modified": "2024-11-26"
     },
     {
-        "url": "http://www.wdsu.com/news-we-love",
-        "website": "www.wdsu.com",
-        "last_modified": "2024-11-24T00:00:00"
+        "url": "https://kion546.com/news/national-world/cnn-national/2024/11/24/investigators-release-update-on-biolab-chemical-plant-fire-probe/",
+        "website": "kion546.com",
+        "last_modified": "2024-11-24"
+    },
+    {
+        "url": "https://kion546.com/news/national-world/cnn-national/2024/11/23/florida-deputy-found-not-guilty-2-years-after-botched-arrest-resulted-in-an-explosion-that-left-a-suspect-with-severe-burns/",
+        "website": "kion546.com",
+        "last_modified": "2024-11-23"
+    },
+    {
+        "url": "https://kion546.com/news/national-world/cnn-world/2024/11/24/inferno-destroys-thousands-of-shanties-in-manilas-biggest-slum-area/",
+        "website": "kion546.com",
+        "last_modified": "2024-11-24"
+    },
+    {
+        "url": "https://kion546.com/news/national-world/cnn-world/2024/11/24/russia-fires-commander-for-false-claims-about-progress-of-war-in-ukraine-military-bloggers-say/",
+        "website": "kion546.com",
+        "last_modified": "2024-11-24"
+    },
+    {
+        "url": "https://kion546.com/category/news/page/3/",
+        "website": "kion546.com",
+        "last_modified": "2024-11-26"
     }
 ]

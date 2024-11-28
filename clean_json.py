@@ -25,7 +25,7 @@ def is_within_last_week(timestamp_str):
     if not isinstance(timestamp_str, str) or timestamp_str in ["Not Available", ""]:
         return False
     try:
-        if len(timestamp_str) == 10:  # Date format 'YYYY-MM-DD'
+        if len(timestamp_str) == 10:  
             timestamp_date = datetime.strptime(timestamp_str, "%Y-%m-%d").date()
         elif timestamp_str.endswith("Z"):
             timestamp_date = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%SZ").date()
@@ -35,13 +35,11 @@ def is_within_last_week(timestamp_str):
         today = datetime.now().date()
         last_week = today - timedelta(days=7)
         
-        # Check if the date is within the last week
         return last_week <= timestamp_date <= today
     except ValueError:
         return False
 
 def normalize_url(url):
-    # Normalize URL by removing trailing slash
     if url.endswith('/'):
         return url[:-1]
     return url

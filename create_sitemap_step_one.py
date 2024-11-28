@@ -12,7 +12,7 @@ CRAWLED_URLS_LOCK = threading.Lock()  # To prevent race conditions
 SKIPPED_URLS = set()
 CRAWLED_FILE = "crawled_websites.txt"
 JSON_FILE = "crawled_websites.json"
-MAX_PAGES_PER_WEBSITE = 500
+MAX_PAGES_PER_WEBSITE = 1000
 
 FIRE_KEYWORDS = ["fire", "burn", "wildfire", "firefighter", "blaze", "inferno", "firefighting", "firestorm", "flames", "arson", "smoke"]
 website_url_counter = {}
@@ -111,7 +111,6 @@ def threaded_crawl(initial_urls):
                 try:
                     links = future.result()
                     if links:
-                        # Submit new links for crawling
                         for link in links:
                             if link not in CRAWLED_URLS and link not in SKIPPED_URLS:
                                 future_to_url[executor.submit(crawl, link)] = link
