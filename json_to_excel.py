@@ -17,7 +17,7 @@ def json_to_excel(json_file, excel_file):
         print(f"Error converting JSON to Excel: {e}")
 
 # Replace these with your file paths
-json_file = "final_result/confirmed_fire_articles_2024-11-27.json"  # Input JSON file path
+json_file = "final_results_of_fire_incidents_2024-12-02.json"  # Input JSON file path
 excel_file = "output.xlsx"  # Output Excel file path
 
 # Convert JSON to Excel

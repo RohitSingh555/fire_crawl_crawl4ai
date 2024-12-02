@@ -6,7 +6,9 @@ files_to_run = [
     "get_last_modified_date.py",
     "clean_json.py",
     # "crawler_by_umang.py",  
-    "crawler_by_rohit.py", 
+    # "crawler_by_rohit.py", 
+    # "final_crawler.py", 
+    "final_crawler_2.py", 
 ]
 
 def run_script(script_name):

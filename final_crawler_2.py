@@ -23,9 +23,9 @@ fire_keywords = [
     'brushfire', 'house-fire', 'forest-fire', 'building-fire', 'firefighters'
 ]
 
-output_file = 'results_of_fire_incidents_29th_nov.json'
+output_file = f'final_results_of_fire_incidents_{datetime.today().strftime("%Y-%m-%d")}.json'
 output_lock = Lock()
-processed_urls = set()  # To track processed URLs
+processed_urls = set()
 
 def load_cleaned_websites():
     try:
@@ -76,49 +76,12 @@ def crawl_website(url):
         logging.error(f"Error crawling {url}: {e}")
         return []
 
-def extract_date_from_content(content):
-    date_patterns = [
-        r'\b(\d{1,2}[/-]\d{1,2}[/-]\d{2,4})\b',
-        r'\b(\d{4}/\d{2}/\d{2})\b',
-        r'\b(\d{4}-\d{2}-\d{2})\b'
-    ]
-    for pattern in date_patterns:
-        match = re.search(pattern, content)
-        if match:
-            date_str = match.group(1)
-            try:
-                date_obj = datetime.strptime(date_str, '%d/%m/%Y')
-            except ValueError:
-                try:
-                    date_obj = datetime.strptime(date_str, '%m/%d/%Y')
-                except ValueError:
-                    try:
-                        date_obj = datetime.strptime(date_str, '%Y/%m/%d')
-                    except ValueError:
-                        try:
-                            date_obj = datetime.strptime(date_str, '%Y-%m-%d')
-                        except ValueError:
-                            continue
-            return date_obj.strftime('%d_%m_%Y')
-    return "Cannot be tracked"
-
-def extract_date_from_url(url):
-    match = re.search(r'(\d{4}/\d{2}/\d{2})', url)
-    if match:
-        date_str = match.group(1)
-        try:
-            date_obj = datetime.strptime(date_str, '%Y/%m/%d')
-            return date_obj.strftime('%d_%m_%Y')
-        except ValueError:
-            return "Cannot be tracked"
-    return "Cannot be tracked"
-
 def process_article(article_url):
     try:
-        if article_url in processed_urls:  # Check if the article has already been processed
+        if article_url in processed_urls: 
             return None
 
-        processed_urls.add(article_url)  # Mark the article as processed
+        processed_urls.add(article_url)
 
         headers = {'User-Agent': 'MyFireNewsCrawler/1.0'}
         response = requests.get(article_url, headers=headers)
@@ -137,13 +100,11 @@ def process_article(article_url):
         max_content_length = 2000
         truncated_content = content[:max_content_length]
 
-        article_date = extract_date_from_url(article_url)
-        if article_date == "Cannot be tracked":
-            article_date = extract_date_from_content(content)
-
         messages = [
-            {"role": "system", "content": "You are an AI that determines if news articles are about fire incidents."},
-            {"role": "user", "content": f"Title: {title}\n\nContent: {truncated_content}\n\nRespond with 'Yes' or 'No'."}
+            {"role": "system", "content": "You are an AI tasked with determining if a news article describes a specific fire incident. "
+                    "The article must involve accidental or unintended fires affecting homes, houses, apartments, buildings, or people. "
+                    "These may include fires caused by electrical faults, negligence, accidents, or natural causes (e.g., forest fires reaching homes). "},
+            {"role": "user", "content": f"Title: {title}\n\nContent: {truncated_content}\n\nURL: {article_url}\n\nExtract the publication date from the content or URL, if possible. If the date is found in the URL, return it in the format 'dd-mm-yyyy'. If the date is found in the content, convert the date into the format 'dd-mm-yyyy'. If the date cannot be determined, respond with 'Date not available'. Also, determine if the article is related to a fire incident and answer with 'yes' or 'no'."}
         ]
 
         ai_response = client.chat.completions.create(
@@ -155,35 +116,62 @@ def process_article(article_url):
             stop=None,
         )
 
-        answer = ai_response.choices[0].message.content.strip()
+        ai_content = ai_response.choices[0].message.content.strip()
+        date = "Date not available"
+        is_related_to_fire = "no"
 
-        if answer.lower() == 'yes':
+        if ai_content:
+            lines = ai_content.split('\n')
+            for line in lines:
+                if "Publication date" in line:
+                    date_match = re.search(r'(\d{2}-\d{2}-\d{4})', line)  
+                    if date_match:
+                        date = date_match.group(1)
+                elif "Related to fire incident" in line:
+                    if 'yes' in line.lower():
+                        is_related_to_fire = 'yes'
+                    elif 'no' in line.lower():
+                        is_related_to_fire = 'no'
+
+        if is_related_to_fire != 'yes':
+            logging.info(f"Article at {article_url} is not related to fire incident, skipping save.")
+            return None
+
+        if date == "Date not available":
+            date_match = re.search(r'(\d{4}/\d{2}/\d{2})', article_url)  
+            if date_match:
+                date = datetime.strptime(date_match.group(1), '%Y/%m/%d').strftime('%d-%m-%Y')
+            logging.warning(f"Date not available for article: {article_url}, using URL date: {date}")
+
+        if any(keyword in truncated_content.lower() for keyword in fire_keywords):
             summary = truncated_content[:500]
-            return {"title": title, "summary": summary, "url": article_url, "date": article_date}
+            return {"title": title, "summary": summary, "url": article_url, "date": date, "is_it_related_to_fire_incident": "yes"}
+
         return None
     except Exception as e:
         logging.error(f"Error processing {article_url}: {e}")
         return None
 
-def save_result_dynamically(entry):
+
+def save_result(entry):
     with output_lock:
-        if not os.path.exists(output_file):
-            with open(output_file, 'w', encoding='utf-8') as f:
-                json.dump([], f)
         try:
+            if not os.path.exists(output_file):
+                with open(output_file, 'w', encoding='utf-8') as f:
+                    json.dump([], f)
+
             with open(output_file, 'r+', encoding='utf-8') as f:
                 data = json.load(f)
-                # Check if entry already exists
                 if not any(d['url'] == entry['url'] for d in data):
                     data.append(entry)
                     f.seek(0)
                     json.dump(data, f, indent=4, ensure_ascii=False)
                     f.truncate()
-                    logging.info(f"Result dynamically saved: {entry['url']}")
+                    logging.info(f"Result saved: {entry['url']}")
                 else:
                     logging.info(f"Duplicate entry found for {entry['url']}, skipping save.")
         except Exception as e:
-            logging.error(f"Error saving result dynamically: {e}")
+            logging.error(f"Error saving result: {e}")
 
 def main():
     urls = load_cleaned_websites()
@@ -201,7 +189,7 @@ def main():
             for future in future_to_url:
                 result = future.result()
                 if result:
-                    save_result_dynamically(result)
+                    save_result(result)
 
 if __name__ == "__main__":
     main()
