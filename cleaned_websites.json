@@ -1,96 +1,6 @@
 [
     {
-        "url": "https://abcnews.go.com",
-        "website": "abcnews.go.com",
-        "last_modified": "2024-12-02T06:11:17"
-    },
-    {
-        "url": "https://www.bloomberg.com",
-        "website": "www.bloomberg.com",
-        "last_modified": "2024-11-29T21:37:15"
-    },
-    {
-        "url": "https://firenews.com",
-        "website": "firenews.com",
-        "last_modified": "2024-12-02T00:39:36"
-    },
-    {
-        "url": "https://www.azfamily.com",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:09:35"
-    },
-    {
-        "url": "https://www.foxnews.com",
-        "website": "www.foxnews.com",
-        "last_modified": "2024-12-02T06:10:59"
-    },
-    {
-        "url": "https://www.nytimes.com",
-        "website": "www.nytimes.com",
-        "last_modified": "2024-12-02T06:03:05"
-    },
-    {
-        "url": "https://www.wsj.com",
-        "website": "www.wsj.com",
-        "last_modified": "2024-12-02T06:01:48"
-    },
-    {
-        "url": "https://abc7.com/search/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:11:28"
-    },
-    {
-        "url": "https://www.wowt.com/",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:10:45"
-    },
-    {
-        "url": "https://www.cbsnews.com/tag/house-fire/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:11:10"
-    },
-    {
-        "url": "https://abc7.com/post",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T05:34:55"
-    },
-    {
-        "url": "https://www.cnn.com",
-        "website": "www.cnn.com",
-        "last_modified": "2024-12-01T00:00:00"
-    },
-    {
-        "url": "https://kion546.com",
-        "website": "kion546.com",
-        "last_modified": "2024-11-29"
-    },
-    {
-        "url": "https://kion546.com/category/news/education/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-26"
-    },
-    {
-        "url": "https://kion546.com/category/news/monterey-county/",
-        "website": "kion546.com",
-        "last_modified": "2024-12-01"
-    },
-    {
         "url": "https://kion546.com/politics/cnn-us-politics/2024/12/01/trumps-extraordinary-selection-of-his-daughters-fathers-in-law-for-key-posts-underscores-his-reliance-on-family-members/",
-        "website": "kion546.com",
-        "last_modified": "2024-12-01"
-    },
-    {
-        "url": "https://kion546.com/news/santa-cruz/2024/11/29/a-vehicle-collided-with-a-building-on-frederick-street-in-santa-cruz-friday-santa-cruz-fire-department/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-29"
-    },
-    {
-        "url": "https://kion546.com/category/news/california/",
-        "website": "kion546.com",
-        "last_modified": "2024-12-01"
-    },
-    {
-        "url": "https://kion546.com/category/news/crime/",
         "website": "kion546.com",
         "last_modified": "2024-12-01"
     },
@@ -98,101 +8,6 @@
         "url": "https://kion546.com/politics/cnn-us-politics/2024/12/01/trumps-extraordinary-selection-of-his-daughters-fathers-in-law-for-key-posts-underscores-his-reliance-on-family-members-2/",
         "website": "kion546.com",
         "last_modified": "2024-12-01"
-    },
-    {
-        "url": "https://www.nytimes.com/spotlight/abortion-news",
-        "website": "www.nytimes.com",
-        "last_modified": "2024-12-02T06:02:50"
-    },
-    {
-        "url": "https://www.nytimes.com/news-event/immigration-us",
-        "website": "www.nytimes.com",
-        "last_modified": "2024-12-02T05:55:14"
-    },
-    {
-        "url": "https://www.nytimes.com/news-event/2024-election",
-        "website": "www.nytimes.com",
-        "last_modified": "2024-12-02T06:04:42"
-    },
-    {
-        "url": "https://www.nytimes.com/spotlight/california-news",
-        "website": "www.nytimes.com",
-        "last_modified": "2024-12-02T05:49:43"
-    },
-    {
-        "url": "https://www.nytimes.com/news-event/ukraine-russia",
-        "website": "www.nytimes.com",
-        "last_modified": "2024-12-02T05:34:09"
-    },
-    {
-        "url": "https://www.azfamily.com/news",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:10:22"
-    },
-    {
-        "url": "https://www.azfamily.com/news/phoenix",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:05:18"
-    },
-    {
-        "url": "https://www.azfamily.com/news/east-valley",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T05:59:36"
-    },
-    {
-        "url": "https://www.azfamily.com/video-gallery/news",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:07:21"
-    },
-    {
-        "url": "https://www.azfamily.com/news/wildfires",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:09:56"
-    },
-    {
-        "url": "https://www.azfamily.com/news/n-arizona",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:03:24"
-    },
-    {
-        "url": "https://www.azfamily.com/news/west-valley",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T05:57:55"
-    },
-    {
-        "url": "https://www.azfamily.com/news/national",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:02:47"
-    },
-    {
-        "url": "https://www.azfamily.com/news/border",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:00:22"
-    },
-    {
-        "url": "https://www.azfamily.com/news/yuma",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:00:56"
-    },
-    {
-        "url": "https://www.azfamily.com/news/investigates",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T05:59:59"
-    },
-    {
-        "url": "https://www.azfamily.com/newsletter",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:09:52"
-    },
-    {
-        "url": "https://www.azfamily.com/news/housing",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:11:26"
-    },
-    {
-        "url": "https://www.azfamily.com/news/technology",
-        "website": "www.azfamily.com",
-        "last_modified": "2024-12-02T06:11:27"
     },
     {
         "url": "https://abcnews.go.com/Politics/trump-hell-fire-fbi-director-christopher-wray-replace/story",
@@ -235,121 +50,6 @@
         "last_modified": "2024-12-02T06:11:55"
     },
     {
-        "url": "https://abcnews.go.com/US/tip-share-abc-news/story",
-        "website": "abcnews.go.com",
-        "last_modified": "2024-12-02T05:48:39"
-    },
-    {
-        "url": "https://www.wowt.com/page/breaking-news-tips/",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:05:27"
-    },
-    {
-        "url": "https://www.wowt.com/news/crime",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:04:29"
-    },
-    {
-        "url": "https://www.wowt.com/news/",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:05:06"
-    },
-    {
-        "url": "https://www.wowt.com/news/education",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T05:38:58"
-    },
-    {
-        "url": "https://www.wowt.com/news/national",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:05:23"
-    },
-    {
-        "url": "https://www.wowt.com/news/international",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:10:56"
-    },
-    {
-        "url": "https://www.wowt.com/video-gallery/news/",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:11:21"
-    },
-    {
-        "url": "https://www.wowt.com/newsletter/",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:11:40"
-    },
-    {
-        "url": "https://www.wowt.com/news/regional",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:05:25"
-    },
-    {
-        "url": "https://www.wowt.com/news/state",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T05:45:02"
-    },
-    {
-        "url": "https://www.wowt.com/news/crimestoppers",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:04:56"
-    },
-    {
-        "url": "https://www.wowt.com/news/6-on-your-side",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:00:19"
-    },
-    {
-        "url": "https://www.wowt.com/news/investigation",
-        "website": "www.wowt.com",
-        "last_modified": "2024-12-02T06:11:43"
-    },
-    {
-        "url": "https://abc7.com/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:11:56"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:11:57"
-    },
-    {
-        "url": "https://abc7.com/newsmakers/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:11:58"
-    },
-    {
-        "url": "https://abc7.com/news/submit-news-tips/27721/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:11:58"
-    },
-    {
-        "url": "https://abc7.com/newsletters",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:11:57"
-    },
-    {
-        "url": "https://www.cbsnews.com/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:11:52"
-    },
-    {
-        "url": "https://www.cbsnews.com/evening-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:08:32"
-    },
-    {
-        "url": "https://www.cbsnews.com/newsletters/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:12:03"
-    },
-    {
-        "url": "https://www.cbsnews.com/cbs-news-mornings/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:12:02"
-    },
-    {
         "url": "https://www.cbsnews.com/news/house-fire-florida-people-dogs-dead-shawn-gossett-arrested-arson/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T06:12:03"
@@ -390,11 +90,6 @@
         "last_modified": "2024-12-02T06:12:04"
     },
     {
-        "url": "https://www.cbsnews.com/news/hunter-biden-padon/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T05:49:31"
-    },
-    {
         "url": "https://www.cbsnews.com/news/notre-dame-restorations-paris-fire-macron-60-minutes/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T05:30:13"
@@ -425,56 +120,6 @@
         "last_modified": "2024-12-02T04:19:26"
     },
     {
-        "url": "https://kion546.com/author/cnn-newsource/",
-        "website": "kion546.com",
-        "last_modified": "2024-12-01"
-    },
-    {
-        "url": "https://kion546.com/category/news/",
-        "website": "kion546.com",
-        "last_modified": "2024-12-01"
-    },
-    {
-        "url": "https://kion546.com/category/news/santa-cruz/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-29"
-    },
-    {
-        "url": "https://kion546.com/category/news/ap-california/",
-        "website": "kion546.com",
-        "last_modified": "2024-12-01"
-    },
-    {
-        "url": "https://kion546.com/category/news/local-news/",
-        "website": "kion546.com",
-        "last_modified": "2024-12-01"
-    },
-    {
-        "url": "https://kion546.com/news/monterey-county/2024/11/27/the-monterey-chp-rescues-a-hawk-ahead-of-the-holiday/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-27"
-    },
-    {
-        "url": "https://kion546.com/author/kion546newsteam/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-27"
-    },
-    {
-        "url": "https://kion546.com/category/news/top-stories/",
-        "website": "kion546.com",
-        "last_modified": "2024-12-01"
-    },
-    {
-        "url": "https://www.bbc.com/news/articles/cn4244mpx3go",
-        "website": "www.bbc.com",
-        "last_modified": "2024-11-25T00:00:00"
-    },
-    {
-        "url": "https://www.foxnews.com/story",
-        "website": "www.foxnews.com",
-        "last_modified": "2024-12-02T00:00:00"
-    },
-    {
         "url": "https://www.wowt.com/content/news/Fire-burns-down-structures-at-historic-Japanese-castle-564150131.html",
         "website": "www.wowt.com",
         "last_modified": "2024-12-02T06:13:58"
@@ -490,289 +135,14 @@
         "last_modified": "2024-12-02T06:13:59"
     },
     {
-        "url": "https://www.cnn.com/newsletters/travel",
-        "website": "www.cnn.com",
-        "last_modified": "2024-12-01T00:00:00"
-    },
-    {
         "url": "https://abc7.com/post/house-explosion-missouri-6-injured-3-critically-st-louis-road-jefferson-city-mo/15607459/",
         "website": "abc7.com",
         "last_modified": "2024-12-02T06:14:21"
     },
     {
-        "url": "https://abc7.com/about/newsteam/tony-cabrera",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/marc-brown",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:28"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/tim-caputo",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:30"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/rachel-brown",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/marc-cota-robles",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/irene-cruz",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:30"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/denise-dador",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:28"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/chris-cristi",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/monica-de-anda",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/jessica-de-nova",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:28"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/michelle-fisher",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:30"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/sophie-flay",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:28"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/shayla-girardin",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/david-gonzalez",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:28"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/rob-fukuzaki",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/sid-garcia",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:28"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/john-gregory",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/rob-hayes",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/dave-kunz",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/leticia-juarez",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:30"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/carlos-granda",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:30"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/josh-haskell",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/ellen-leyva",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/jovana-lara",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:30"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/ashley-mackey",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/leslie-lopez",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/rob-mcmillan",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:28"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/anabel-munoz",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/david-ono",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/amanda-palacios",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/phillip-palmer",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/jaysha-patel",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/george-pennacchio",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:28"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/tim-pulliam",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/dallas-raines",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/amy-powell",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/scott-reiff",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/danny-romero",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/brianna-ruffalo",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/jory-rand",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/gabe-santos",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/curt-sandoval",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/karl-schmid",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:32"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/coleen-sullivan",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:28"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/leo-stallworth",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:30"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/leslie-sykes",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://abc7.com/about/newsteam/leanne-suter",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
         "url": "https://www.cbsnews.com/news/jason-kander-afghanistan-rescue-plan-60-minutes/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T05:47:20"
-    },
-    {
-        "url": "https://www.cbsnews.com/evening-news/business/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:12:40"
-    },
-    {
-        "url": "https://www.cbsnews.com/evening-news/interviews/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:13:15"
-    },
-    {
-        "url": "https://www.cbsnews.com/evening-news/the-team/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:12:39"
-    },
-    {
-        "url": "https://www.cbsnews.com/evening-news/on-the-road/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://www.cbsnews.com/evening-news/health/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://www.cbsnews.com/evening-news/washington/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:14:29"
     },
     {
         "url": "https://www.cbsnews.com/news/notre-dame-cathedral-restoration-after-fire-finishes-macron-tour/",
@@ -790,11 +160,6 @@
         "last_modified": "2024-12-02T04:53:49"
     },
     {
-        "url": "https://www.cbsnews.com/cbs-news-mornings/2/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:14:33"
-    },
-    {
         "url": "https://www.cbsnews.com/chicago/news/melissa-lamesch-matthew-plote-murder-illinois-firefighter-48-hours/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T04:21:47"
@@ -806,11 +171,6 @@
     },
     {
         "url": "https://www.cbsnews.com/pittsburgh/news/jeannette-neighbor-rescues-children-from-fire-guy-street/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:14:33"
-    },
-    {
-        "url": "https://www.cbsnews.com/local-news",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T06:14:33"
     },
@@ -915,69 +275,9 @@
         "last_modified": "2024-12-02T06:12:06"
     },
     {
-        "url": "https://kion546.com/category/news/central-coast/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-29"
-    },
-    {
-        "url": "https://kion546.com/news/2024/11/30/hayes-carson-each-account-for-2-tds-air-force-beats-san-diego-state-31-20/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-30"
-    },
-    {
-        "url": "https://kion546.com/category/news/page/2/",
-        "website": "kion546.com",
-        "last_modified": "2024-12-01"
-    },
-    {
-        "url": "https://kion546.com/category/news/monterey/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-26"
-    },
-    {
-        "url": "https://kion546.com/category/news/seaside/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-26"
-    },
-    {
-        "url": "https://kion546.com/news/national-world/cnn-national/2024/11/26/animal-rescue-pilot-and-dog-killed-in-plane-crash-in-new-york-mountains-2-dogs-survive/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-26"
-    },
-    {
-        "url": "https://www.wdsu.com/article/several-people-displaced-after-large-fire-ignites-overnight-in-mid-city/63031091",
-        "website": "www.wdsu.com",
-        "last_modified": "2024-11-30T16:27:00Z"
-    },
-    {
-        "url": "https://www.wdsu.com/article/rescued-turkeys-thanksgiving-farm-sanctuary/63037314",
-        "website": "www.wdsu.com",
-        "last_modified": "2024-11-28T05:12:00Z"
-    },
-    {
-        "url": "http://www.foxnews.com/",
-        "website": "www.foxnews.com",
-        "last_modified": "2024-12-02T06:10:59"
-    },
-    {
-        "url": "https://abcnews.go.com/alerts/History",
-        "website": "abcnews.go.com",
-        "last_modified": "2024-12-02T06:16:55"
-    },
-    {
         "url": "https://abc7.com/post/1-person-detained-after-report-shots-fired-deputies-malibu/15604231/",
         "website": "abc7.com",
         "last_modified": "2024-12-02T06:16:58"
-    },
-    {
-        "url": "https://www.cnn.com/newsletters",
-        "website": "www.cnn.com",
-        "last_modified": "2024-12-01T00:00:00"
-    },
-    {
-        "url": "https://abc7.com/tag/abc-news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:17:05"
     },
     {
         "url": "https://abc7.com/post/concern-mudflows-grows-rain-slams-southern-california-amid-fight-wildfires/15332137/",
@@ -1085,11 +385,6 @@
         "last_modified": "2024-12-02T06:17:28"
     },
     {
-        "url": "https://abc7.com/tag/eyewitness-newsmakers/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:17:36"
-    },
-    {
         "url": "https://abc7.com/post/somis-resident-luis-villanueva-details-heartbreak-after-losing-home-mountain-fire-thomas/15546434/",
         "website": "abc7.com",
         "last_modified": "2024-12-02T06:17:36"
@@ -1110,42 +405,7 @@
         "last_modified": "2024-12-02T02:59:42"
     },
     {
-        "url": "https://www.cbsnews.com/evening-news/business/2/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:13:37"
-    },
-    {
-        "url": "https://www.cbsnews.com/news/robert-costa/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:17:46"
-    },
-    {
-        "url": "https://www.cbsnews.com/news/jill-schlesinger/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:13:05"
-    },
-    {
-        "url": "https://www.cbsnews.com/evening-news/interviews/2/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:17:46"
-    },
-    {
-        "url": "https://www.cbsnews.com/news/scott-macfarlane/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:17:46"
-    },
-    {
-        "url": "https://www.cbsnews.com/evening-news/health/2/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:17:49"
-    },
-    {
         "url": "https://www.cbsnews.com/news/notre-dame-fire-exposes-long-hidden-iron-inside-paris-landmark/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:17:49"
-    },
-    {
-        "url": "https://www.cbsnews.com/evening-news/washington/2/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T06:17:49"
     },
@@ -1155,79 +415,9 @@
         "last_modified": "2024-12-02T06:17:49"
     },
     {
-        "url": "https://www.cbsnews.com/chicago/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:13:54"
-    },
-    {
-        "url": "https://www.cbsnews.com/evening-news-on-the-road",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:14:29"
-    },
-    {
-        "url": "https://www.cbsnews.com/texas/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:14:57"
-    },
-    {
-        "url": "https://www.cbsnews.com/texas/local-news/business/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:06:28"
-    },
-    {
-        "url": "https://www.cbsnews.com/texas/local-news/consumer/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:06:21"
-    },
-    {
-        "url": "https://www.cbsnews.com/miami/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:12:50"
-    },
-    {
-        "url": "https://www.cbsnews.com/miami/local-news/consumer/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:06:11"
-    },
-    {
-        "url": "https://www.cbsnews.com/chicago/local-news/autos/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:17:52"
-    },
-    {
-        "url": "https://www.cbsnews.com/miami/have-a-news-tip/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:17:52"
-    },
-    {
-        "url": "https://www.cbsnews.com/pittsburgh/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:17:14"
-    },
-    {
-        "url": "https://www.cbsnews.com/cbs-news-mornings/3/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:17:54"
-    },
-    {
         "url": "https://www.cbsnews.com/pittsburgh/news/jeannette-deadly-house-fire-several-unaccounted-for-guy-street/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T06:17:56"
-    },
-    {
-        "url": "https://www.cbsnews.com/minnesota/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:15:50"
-    },
-    {
-        "url": "https://www.cbsnews.com/philadelphia/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:15:55"
-    },
-    {
-        "url": "https://www.cbsnews.com/philadelphia/news-tip/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:12:37"
     },
     {
         "url": "https://www.cbsnews.com/philadelphia/news/fatal-fire-rowhome-fire-north-17th-street/",
@@ -1250,16 +440,6 @@
         "last_modified": "2024-12-02T05:21:41"
     },
     {
-        "url": "https://www.cbsnews.com/60-minutes-newsmakers",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:17:04"
-    },
-    {
-        "url": "https://www.cbsnews.com/newyork/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:16:51"
-    },
-    {
         "url": "https://www.cbsnews.com/newyork/news/5-people-treated-for-smoke-inhalation-after-early-morning-fire-in-brooklyn-lithium-ion-battery-found-inside/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T06:18:08"
@@ -1268,16 +448,6 @@
         "url": "https://www.cbsnews.com/newyork/news/firefighters-lithium-ion-battery-fires-electric-cars-bikes-scooters/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T06:18:08"
-    },
-    {
-        "url": "https://www.cbsnews.com/baltimore/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:17:14"
-    },
-    {
-        "url": "https://www.cbsnews.com/baltimore/news-tip/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:11:13"
     },
     {
         "url": "https://www.cbsnews.com/baltimore/news/city-hall-vehicle-fire-arson-investigation/",
@@ -1320,26 +490,6 @@
         "last_modified": "2024-12-02T06:18:16"
     },
     {
-        "url": "https://www.cbsnews.com/detroit/news-tips/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T05:42:23"
-    },
-    {
-        "url": "https://www.cbsnews.com/detroit/local-news/autos/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T05:52:52"
-    },
-    {
-        "url": "https://www.cbsnews.com/detroit/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:13:20"
-    },
-    {
-        "url": "https://www.cbsnews.com/sanfrancisco/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:13:55"
-    },
-    {
         "url": "https://www.cbsnews.com/news/wisconsin-apartment-fire-deaths-criminal-investigation-hartland/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T04:27:26"
@@ -1365,16 +515,6 @@
         "last_modified": "2024-12-02T06:18:25"
     },
     {
-        "url": "https://www.cbsnews.com/losangeles/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:16:53"
-    },
-    {
-        "url": "https://www.cbsnews.com/losangeles/kcal-news-team/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:10:36"
-    },
-    {
         "url": "https://www.cbsnews.com/losangeles/news/person-found-dead-after-fire-burns-garage-at-la-habra-home/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T04:18:21"
@@ -1383,16 +523,6 @@
         "url": "https://www.cbsnews.com/losangeles/news/100-downtown-la-residents-affected-by-fire-at-apartment-building-authorities-say/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T05:45:36"
-    },
-    {
-        "url": "https://www.cbsnews.com/detroit/tag/berkley-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:18:30"
-    },
-    {
-        "url": "https://www.cbsnews.com/detroit/local-news-autos",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:15:09"
     },
     {
         "url": "https://www.cbsnews.com/news/israel-hamas-war-cease-fire-hope-no-relief-yet-palestinian-families-gaza-israeli-hostages/",
@@ -1425,11 +555,6 @@
         "last_modified": "2024-12-02T05:40:35"
     },
     {
-        "url": "https://www.cbsnews.com/sacramento/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:12:40"
-    },
-    {
         "url": "https://www.cbsnews.com/sacramento/local-news/wildfires/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T06:18:15"
@@ -1460,29 +585,14 @@
         "last_modified": "2024-12-02T06:02:07"
     },
     {
-        "url": "https://www.cbsnews.com/colorado/local-news/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:16:58"
-    },
-    {
         "url": "https://www.cbsnews.com/texas/news/southwest-airlines-executive-chairman-gary-kelly-retires-early-board-announces-new-members/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T06:18:42"
     },
     {
-        "url": "https://www.cbsnews.com/colorado/newstips/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T06:18:03"
-    },
-    {
         "url": "https://www.cbsnews.com/colorado/news/colorado-fire-crews-rush-burning-building-fuel-tanks-exploded-byers/",
         "website": "www.cbsnews.com",
         "last_modified": "2024-12-02T03:59:56"
-    },
-    {
-        "url": "https://www.cbsnews.com/news/sleep-hygiene-tips/",
-        "website": "www.cbsnews.com",
-        "last_modified": "2024-12-02T03:49:32"
     },
     {
         "url": "https://kion546.com/news/2024/12/01/taiwans-president-meets-hawaiis-governor-and-members-of-congress-in-a-visit-condemned-by-china/",
@@ -1500,11 +610,6 @@
         "last_modified": "2024-12-01"
     },
     {
-        "url": "https://kion546.com/category/news/page/3/",
-        "website": "kion546.com",
-        "last_modified": "2024-11-30"
-    },
-    {
         "url": "https://abcnews.go.com/International/wireStory/explosion-damages-water-power-supply-kosovo-116332879",
         "website": "abcnews.go.com",
         "last_modified": "2024-12-02T06:20:54"
@@ -1513,11 +618,6 @@
         "url": "https://abcnews.go.com/US/exclusive-members-rock-reflect-70-years-brown-board/story",
         "website": "abcnews.go.com",
         "last_modified": "2024-12-02T06:04:56"
-    },
-    {
-        "url": "https://abcnews.go.com/alerts/history",
-        "website": "abcnews.go.com",
-        "last_modified": "2024-12-02T06:20:55"
     },
     {
         "url": "https://abcnews.go.com/US/navy-exonerates-256-black-sailors-unjustly-court-martialed-wwii-port-chicago-explosion/story",
@@ -1535,19 +635,9 @@
         "last_modified": "2024-12-02T06:20:52"
     },
     {
-        "url": "https://abc7.com/tag/all-good-news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:20:56"
-    },
-    {
         "url": "https://abc7.com/post/airport-fire-orange-countys-trabuco-canyon-spreads-more-22000-acres/15290682/",
         "website": "abc7.com",
         "last_modified": "2024-12-02T06:20:52"
-    },
-    {
-        "url": "https://abc7.com/tag/animal-news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:20:57"
     },
     {
         "url": "https://abc7.com/post/19-year-old-suspect-arrested-grisly-murder-4-people-found-inside-burning-home-lancaster/15571189/",
@@ -1555,49 +645,14 @@
         "last_modified": "2024-12-02T06:20:51"
     },
     {
-        "url": "https://abc7.com/tag/orange-county-news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:20:57"
-    },
-    {
         "url": "https://abc7.com/post/fork-fire-angeles-national-forest-glendora-prompts-evacuation/15072749/",
         "website": "abc7.com",
         "last_modified": "2024-12-02T06:20:52"
     },
     {
-        "url": "https://abc7.com/tag/movie-news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:20:56"
-    },
-    {
         "url": "https://abc7.com/post/ventura-county-brush-fire-2-alarm-blaze-erupts-moorpark-amid-strong-winds-red-flag-warning/15518152/",
         "website": "abc7.com",
         "last_modified": "2024-12-02T06:20:56"
-    },
-    {
-        "url": "https://abc7.com/tag/gavin-newsom/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:20:56"
-    },
-    {
-        "url": "https://abc7.com/tag/music-news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:20:56"
-    },
-    {
-        "url": "https://abc7.com/tag/auto-news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:20:57"
-    },
-    {
-        "url": "https://abc7.com/tag/womens-history-month/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:20:57"
-    },
-    {
-        "url": "https://abc7.com/tag/museum-of-natural-history/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:20:57"
     },
     {
         "url": "https://abc7.com/post/casa-de-monrovia-es-destruida-por-incendio-una-posible-explosion-la-vivienda-vecino-tambien-sufrio-danos/15317135/",
@@ -1610,19 +665,9 @@
         "last_modified": "2024-12-02T06:20:59"
     },
     {
-        "url": "https://abc7.com/tag/news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:20:58"
-    },
-    {
         "url": "https://abc7.com/post/mountain-fire-destroyed-hundreds-acres-agricultural-land-including-avocado-raspberry-fields/15539330/",
         "website": "abc7.com",
         "last_modified": "2024-12-02T06:20:59"
-    },
-    {
-        "url": "https://www.cnn.com/travel/news",
-        "website": "www.cnn.com",
-        "last_modified": "2024-12-01T00:00:00"
     },
     {
         "url": "https://abcnews.go.com/International/wireStory/arrests-north-macedonia-after-raucous-celebrations-members-ethnic-116325346",
@@ -1710,11 +755,6 @@
         "last_modified": "2024-12-02T06:22:22"
     },
     {
-        "url": "https://abc7.com/tag/good-news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:22:30"
-    },
-    {
         "url": "https://abc7.com/post/airport-fire-orange-countys-trabuco-canyon-burns-more-8500-acres/15285775/",
         "website": "abc7.com",
         "last_modified": "2024-12-02T06:22:22"
@@ -1725,24 +765,9 @@
         "last_modified": "2024-12-02T06:22:22"
     },
     {
-        "url": "https://abc7.com/tag/storytellers-spotlight/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:22:29"
-    },
-    {
         "url": "https://abc7.com/post/mountain-fire-evacuation-orders-warnings-now-lifted-relief-efforts-continue/15554756/",
         "website": "abc7.com",
         "last_modified": "2024-12-02T06:22:21"
-    },
-    {
-        "url": "https://abc7.com/tag/black-history-month/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:22:29"
-    },
-    {
-        "url": "https://abc7.com/tag/black-history/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:22:29"
     },
     {
         "url": "https://abc7.com/post/ventura-county-firefighters-gain-ground-mountain-fire-thanks-decreased-winds/15530844/",
@@ -1770,11 +795,6 @@
         "last_modified": "2024-12-02T06:22:29"
     },
     {
-        "url": "https://abc7.com/tag/texas-news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:22:30"
-    },
-    {
         "url": "https://abcnews.go.com/US/wireStory/purdue-fires-football-coach-ryan-walters-after-5-116353965",
         "website": "abcnews.go.com",
         "last_modified": "2024-12-02T06:22:41"
@@ -1785,39 +805,9 @@
         "last_modified": "2024-12-02T06:22:36"
     },
     {
-        "url": "https://abc7.com/tag/casting-news/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:22:37"
-    },
-    {
         "url": "https://abc7.com/post/blaze-bernstein-murder-defense-calls-samuel-woodwards-actions/15017317/",
         "website": "abc7.com",
         "last_modified": "2024-12-02T06:22:45"
-    },
-    {
-        "url": "https://abc7.com/storytellerspotlight/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:22:37"
-    },
-    {
-        "url": "https://abc7.com/tag/history/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:22:46"
-    },
-    {
-        "url": "https://abc7.com/tag/blackhistory/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:22:43"
-    },
-    {
-        "url": "https://www.foxnews.com/category/odd-news",
-        "website": "www.foxnews.com",
-        "last_modified": "2024-12-02T00:00:00"
-    },
-    {
-        "url": "https://www.foxnews.com/category/good-news",
-        "website": "www.foxnews.com",
-        "last_modified": "2024-12-02T00:00:00"
     },
     {
         "url": "https://abcnews.go.com/Sports/wireStory/purdue-fires-coach-ryan-walters-after-5-19-116354160",
@@ -1833,30 +823,5 @@
         "url": "https://abc7.com/post/gold-pocket-watch-given-captain-rescued-titanic-survivors-sells-record-price/15555427/",
         "website": "abc7.com",
         "last_modified": "2024-12-02T06:22:52"
-    },
-    {
-        "url": "https://www.cnn.com/specials/travel-newsletter",
-        "website": "www.cnn.com",
-        "last_modified": "2024-12-01T00:00:00"
-    },
-    {
-        "url": "https://abc7.com/tag/magic-of-storytelling/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:23:29"
-    },
-    {
-        "url": "https://abc7.com/tag/magicofstorytelling/",
-        "website": "abc7.com",
-        "last_modified": "2024-12-02T06:23:43"
-    },
-    {
-        "url": "https://www.cnn.com/newsletters/the-good-stuff",
-        "website": "www.cnn.com",
-        "last_modified": "2024-12-01T00:00:00"
-    },
-    {
-        "url": "https://www.cnn.com/newsletters/5-things",
-        "website": "www.cnn.com",
-        "last_modified": "2024-12-01T00:00:00"
     }
 ]

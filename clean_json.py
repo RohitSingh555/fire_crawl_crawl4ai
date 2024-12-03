@@ -33,7 +33,7 @@ def is_within_last_week(timestamp_str):
             timestamp_date = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%S").date()
 
         today = datetime.now().date()
-        last_week = today - timedelta(days=7)
+        last_week = today - timedelta(days=2)
         
         return last_week <= timestamp_date <= today
     except ValueError:
@@ -51,10 +51,17 @@ def clean_json(input_file, output_file):
 
         cleaned_data = []
         seen_urls = set()
+        
+        # Define the minimum length for URLs
+        MIN_URL_LENGTH = len("https://www.cbsnews.com/minnesota/local-news/sdfsdfsdf")
 
         for entry in data:
             url = entry.get("url", "")
             normalized_url = normalize_url(url)
+            
+            # Filter logic: exclude short URLs
+            if len(url) < MIN_URL_LENGTH:
+                continue
             
             if not contains_exclude_keywords(url) and \
                (len(url) <= 50 or contains_fire_keywords(url)) and \
