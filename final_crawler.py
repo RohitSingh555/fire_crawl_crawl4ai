@@ -4,24 +4,33 @@ from bs4 import BeautifulSoup
 import time
 import logging
 import os
-from datetime import datetime, timedelta
-from openai import OpenAI
+from urllib.parse import urljoin, urlparse
+from dotenv import load_dotenv
+from langchain_groq import ChatGroq
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from threading import Lock
 import re
-from dotenv import load_dotenv
 
 load_dotenv()
 
-client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
-
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+groq_api_key = os.getenv("GROQ_API_KEY")
+groq_model = "llama3-8b-8192"
+
+llm = ChatGroq(
+    temperature=0.1, 
+    groq_api_key=os.getenv('GROQ_API_KEY'), 
+    model_name='gpt-4o-mini'
+)
 
 fire_keywords = [
     'fire', 'blaze', 'burn', 'wildfire', 'inferno', 'smoke', 'flames', 'arson',
     'brushfire', 'house-fire', 'forest-fire', 'building-fire', 'firefighters'
 ]
 
-output_file = f'fire_incidents_{datetime.today().strftime("%Y-%m-%d")}.json'
+output_file = os.path.join(os.getcwd(), f'results_of_fire_incidents.json')
 output_lock = Lock()
 processed_urls = set()
 
@@ -34,10 +43,45 @@ def load_cleaned_websites():
         logging.error(f"Error loading cleaned websites: {e}")
         return []
 
-def get_today_and_yesterday_dates():
-    today = datetime.today().strftime('%d-%m-%Y')
-    yesterday = (datetime.today() - timedelta(days=1)).strftime('%d-%m-%Y')
-    return today, yesterday
+def is_allowed(url, user_agent='MyFireNewsCrawler/1.0'):
+    import urllib.robotparser
+
+    parsed_uri = urlparse(url)
+    domain = f"{parsed_uri.scheme}://{parsed_uri.netloc}"
+    robots_url = urljoin(domain, '/robots.txt')
+
+    rp = urllib.robotparser.RobotFileParser()
+    rp.set_url(robots_url)
+    try:
+        rp.read()
+        return rp.can_fetch(user_agent, url)
+    except Exception as e:
+        logging.warning(f"Could not read robots.txt for {domain}: {e}")
+        return False
+
+def crawl_website(url):
+    logging.info(f"Crawling {url}")
+    try:
+        headers = {'User-Agent': 'MyFireNewsCrawler/1.0'}
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        article_links = []
+        for link in soup.find_all('a', href=True):
+            href = link['href']
+            full_url = href if href.startswith('http') else urljoin(url, href)
+            parsed_full_url = urlparse(full_url)
+            normalized_url = parsed_full_url.scheme + '://' + parsed_full_url.netloc + parsed_full_url.path
+
+            if any(keyword in normalized_url.lower() for keyword in fire_keywords):
+                if normalized_url not in article_links:
+                    article_links.append(normalized_url)
+
+        return article_links
+    except Exception as e:
+        logging.error(f"Error crawling {url}: {e}")
+        return []
 
 def process_article(article_url):
     try:
@@ -63,23 +107,19 @@ def process_article(article_url):
         max_content_length = 2000
         truncated_content = content[:max_content_length]
 
-        messages = [
-            {"role": "system", "content": "You are an AI tasked with determining if a news article describes a specific fire incident. "
-                    "The article must involve accidental or unintended fires affecting homes, houses, apartments, buildings, or people. "
-                    "These may include fires caused by electrical faults, negligence, accidents, or natural causes (e.g., forest fires reaching homes). "},
-            {"role": "user", "content": f"Title: {title}\n\nContent: {truncated_content}\n\nURL: {article_url}\n\nExtract the publication date, Published date (anything that provides the information about the date of the incident) from the content or URL, if possible. If the date is found in the URL, return it in the format 'dd-mm-yyyy'. If the date is found in the content, convert the date into the format 'dd-mm-yyyy'. If the date cannot be determined, respond with 'Date not available'. Also, determine if the article is related to a fire incident and answer with 'yes' or 'no'."}
-        ]
-
-        ai_response = client.chat.completions.create(
-            model='gpt-4o-mini',
-            messages=messages,
-            max_tokens=155,
-            temperature=0.1,
-            n=1,
-            stop=None,
+        prompt = (
+            "You are an AI tasked with determining if a news article describes a specific fire incident. "
+            "The article must involve accidental or unintended fires affecting homes, houses, apartments, buildings, or people. "
+            "These may include fires caused by electrical faults, negligence, accidents, or natural causes (e.g., forest fires reaching homes).\n\n"
+            f"Title: {title}\nContent: {truncated_content}\nURL: {article_url}\n\n"
+            "Extract the publication date from the content or URL, if possible. If the date is found in the URL, return it in the format 'dd-mm-yyyy'. "
+            "If the date is found in the content, convert the date into the format 'dd-mm-yyyy'. If the date cannot be determined, respond with 'Date not available'. "
+            "Also, determine if the article is related to a fire incident and answer with 'yes' or 'no'."
         )
 
-        ai_content = ai_response.choices[0].message.content.strip()
+        ai_response = llm.generate(prompt)
+        ai_content = ai_response['text'].strip()
+
         date = "Date not available"
         is_related_to_fire = "no"
 
@@ -106,17 +146,8 @@ def process_article(article_url):
                 date = datetime.strptime(date_match.group(1), '%Y/%m/%d').strftime('%d-%m-%Y')
             logging.warning(f"Date not available for article: {article_url}, using URL date: {date}")
 
-        # Check if the date is today's or yesterday's date
-        today, yesterday = get_today_and_yesterday_dates()
-        if date != today and date != yesterday:
-            logging.info(f"Article at {article_url} has an outdated date ({date}), skipping save.")
-            return None
-
-        if any(keyword in truncated_content.lower() for keyword in fire_keywords):
-            summary = truncated_content[:500]
-            return {"title": title, "summary": summary, "url": article_url, "date": date, "is_it_related_to_fire_incident": "yes"}
-
-        return None
+        summary = truncated_content[:500]
+        return {"title": title, "summary": summary, "url": article_url, "date": date, "is_it_related_to_fire_incident": "yes"}
     except Exception as e:
         logging.error(f"Error processing {article_url}: {e}")
         return None
@@ -129,7 +160,12 @@ def save_result(entry):
                     json.dump([], f)
 
             with open(output_file, 'r+', encoding='utf-8') as f:
-                data = json.load(f)
+                try:
+                    data = json.load(f)
+                except json.JSONDecodeError:
+                    logging.warning(f"JSON file is empty or corrupted; initializing new data.")
+                    data = []
+
                 if not any(d['url'] == entry['url'] for d in data):
                     data.append(entry)
                     f.seek(0)
@@ -142,16 +178,22 @@ def save_result(entry):
             logging.error(f"Error saving result: {e}")
 
 def main():
-    # Load URLs from cleaned_websites.json
     urls = load_cleaned_websites()
 
-    # Process each URL
-    for website in urls:
-        logging.info(f"Processing URL: {website}")
-        result = process_article(website)
-        if result:
-            save_result(result)
-        time.sleep(2)
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        for website in urls:
+            article_urls = crawl_website(website)
+            logging.info(f"Found {len(article_urls)} potential fire-related article links on {website}")
+            time.sleep(2)
+
+            future_to_url = {
+                executor.submit(process_article, url): url for url in article_urls if is_allowed(url)
+            }
+
+            for future in future_to_url:
+                result = future.result()
+                if result:
+                    save_result(result)
 
 if __name__ == "__main__":
     main()

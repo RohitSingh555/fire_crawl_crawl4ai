@@ -23,7 +23,7 @@ fire_keywords = [
     'brushfire', 'house-fire', 'forest-fire', 'building-fire', 'firefighters'
 ]
 
-output_file = f'final_results_of_fire_incidents_{datetime.today().strftime("%Y-%m-%d")}.json'
+output_file = f'results_of_fire_incidents_{datetime.today().strftime("%Y-%m-%d")}.json'
 output_lock = Lock()
 processed_urls = set()
 
