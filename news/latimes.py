@@ -28,7 +28,7 @@ ws.append(['Title', 'Description', 'Date', 'URL'])
 
 # Function to scrape the articles
 def scrape_page(page_num):
-    url = f'https://www.latimes.com/search?q=Fire&f0=00000163-01e2-d9e5-adef-33e2984a0000&s={page_num}'
+    url = f'https://www.latimes.com/search?q=Fire&f0=00000163-01e2-d9e5-adef-33e2984a0000&s=1&p={page_num}'
     driver.get(url)
     time.sleep(3)  # Wait for the page to load
 
