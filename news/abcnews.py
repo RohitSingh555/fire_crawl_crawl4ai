@@ -175,6 +175,38 @@ def save_to_excel(fox_news_df, abc_news_df, azfamily_news_df):
     all_articles.to_excel('combined_news_data.xlsx', index=False)
     print("Data saved to combined_news_data.xlsx")
 
+import json
+
+def extract_urls_and_save_to_json(fox_news_df, abc_news_df, azfamily_news_df):
+    url_dict = {}
+
+    if fox_news_df is not None:
+        for _, row in fox_news_df.iterrows():
+            channel_url = row['Link'].split('/')[2]  
+            if channel_url not in url_dict:
+                url_dict[channel_url] = []
+            url_dict[channel_url].append(row['Link'])
+
+    if abc_news_df is not None:
+        for _, row in abc_news_df.iterrows():
+            channel_url = row['Link'].split('/')[2]  
+            if channel_url not in url_dict:
+                url_dict[channel_url] = []
+            url_dict[channel_url].append(row['Link'])
+
+    if azfamily_news_df is not None:
+        for _, row in azfamily_news_df.iterrows():
+            channel_url = row['Link'].split('/')[2]  
+            if channel_url not in url_dict:
+                url_dict[channel_url] = []
+            url_dict[channel_url].append(row['Link'])
+
+    with open('news_urls.json', 'w') as json_file:
+        json.dump(url_dict, json_file, indent=4)
+    print("URLs saved to news_urls.json")
+
+
+
 fox_news_url = 'https://www.foxnews.com/search-results/search?q=fire'
 abc_news_url_base = 'https://abcnews.go.com/search?searchtext=fire&section=US&sort=date'
 azfamily_url = 'https://www.azfamily.com/search/?query=fire'
@@ -182,5 +214,6 @@ azfamily_url = 'https://www.azfamily.com/search/?query=fire'
 fox_news_df = fetch_fox_news(fox_news_url)
 abc_news_df = scrape_abc_news_selenium(abc_news_url_base, 1, 5)
 azfamily_news_df = scrape_azfamily_fire_news(azfamily_url)
+extract_urls_and_save_to_json(fox_news_df, abc_news_df, azfamily_news_df)
 
 save_to_excel(fox_news_df, abc_news_df, azfamily_news_df)
