@@ -55,12 +55,7 @@ def fetch_fox_news(url):
         except Exception as e:
             title = 'No title'
             link = 'No link'
-        
-        try:
-            description = article.find_element(By.CSS_SELECTOR, 'p.dek').text.strip()
-        except Exception as e:
-            description = 'No description available'
-        
+     
         try:
             relative_date = article.find_element(By.CSS_SELECTOR, 'span.time').text.strip()
             date = convert_relative_to_absolute(relative_date).strftime('%Y-%m-%d')
@@ -69,11 +64,7 @@ def fetch_fox_news(url):
         
         if title and link and is_today_or_yesterday(date):
             article_data.append({
-                'Title': title,
                 'Link': link,
-                'Description': description,
-                'Date': date,
-                'Channel': 'Fox News'
             })
     
     if article_data:
@@ -96,26 +87,18 @@ def scrape_abc_news_selenium(url_base, start_page, end_page):
 
         for article in articles:
             try:
-                title = article.find_element(By.CSS_SELECTOR, 'h2 a').text.strip()
                 link = article.find_element(By.CSS_SELECTOR, 'h2 a').get_attribute('href')
             except Exception as e:
                 title = 'No title'
                 link = 'No link'
 
-            try:
-                description = article.find_element(By.CSS_SELECTOR, 'div.ContentRoll__Desc').text.strip()
-            except Exception as e:
-                description = 'No description available'
-
+          
             date = today_date
 
-            if title and link and is_today_or_yesterday(date):
+            if  link and is_today_or_yesterday(date):
                 article_data.append({
-                    'Title': title,
                     'Link': link,
-                    'Description': description,
-                    'Date': date,
-                    'Channel': 'ABC News'
+
                 })
 
         if article_data:
@@ -138,16 +121,11 @@ def scrape_azfamily_fire_news(url):
 
     for article in articles:
         try:
-            title = article.find('div', class_='queryly_item_title').text.strip()
             link = article.find('a')['href']
         except Exception as e:
-            title = 'No title'
             link = 'No link'
         
-        try:
-            description = article.find('div', class_='queryly_item_description').text.strip()
-        except Exception as e:
-            description = 'No description available'
+     
         
         try:
             date_element = article.find('div', style="margin-top:6px;color:#555;font-size:12px;")
@@ -155,13 +133,10 @@ def scrape_azfamily_fire_news(url):
         except Exception as e:
             date = 'No date available'
 
-        if title and link and is_today_or_yesterday(date):
+        if link and is_today_or_yesterday(date):
             article_data.append({
-                'Title': title,
                 'Link': 'https://www.azfamily.com' + link,
-                'Description': description,
-                'Date': date,
-                'Channel': 'AZ Family'
+   
             })
 
     if article_data:
@@ -170,10 +145,7 @@ def scrape_azfamily_fire_news(url):
         print("No articles found for AZ Family News.")
         return None
 
-def save_to_excel(fox_news_df, abc_news_df, azfamily_news_df):
-    all_articles = pd.concat([fox_news_df, abc_news_df, azfamily_news_df], ignore_index=True)
-    all_articles.to_excel('combined_news_data.xlsx', index=False)
-    print("Data saved to combined_news_data.xlsx")
+
 
 import json
 
@@ -216,4 +188,3 @@ abc_news_df = scrape_abc_news_selenium(abc_news_url_base, 1, 5)
 azfamily_news_df = scrape_azfamily_fire_news(azfamily_url)
 extract_urls_and_save_to_json(fox_news_df, abc_news_df, azfamily_news_df)
 
-save_to_excel(fox_news_df, abc_news_df, azfamily_news_df)

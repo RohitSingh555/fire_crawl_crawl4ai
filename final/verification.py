@@ -22,8 +22,9 @@ headers = {
     'Pragma': 'no-cache',
     'DNT': '1',
     'X-Requested-With': 'XMLHttpRequest',
-    'If-None-Match': 'W/"35-f6dpDOfTQUZECdaBBhKg+W5fEz0"',
+    'If-None-Match': 'W/"35-f6dpDOfTQUZECdaBBhKg+W5fEz0"'
 }
+
 
 def extract_article_data(url):
     try:
@@ -154,7 +155,7 @@ def process_urls_from_json(input_json_file, output_json_file):
 
     results = []
 
-    with ThreadPoolExecutor(max_workers=4) as executor:
+    with ThreadPoolExecutor(max_workers=8) as executor:
         futures = []
         for website, urls in urls_data.items():
             for url in urls:
