@@ -21,9 +21,13 @@ def send_email_with_attachment(smtp_server, port, sender_email, sender_password,
             msg.add_attachment(file_data, maintype='application', subtype='vnd.openxmlformats-officedocument.spreadsheetml.sheet', filename=file_name)
 
         # Connect to the SMTP server and send the email
+       # Connect to the SMTP server and send the email
         with smtplib.SMTP_SSL(smtp_server, port) as server:
+            print("Connecting to the server...")
             server.login(sender_email, sender_password)
+            print("Logged in successfully!")
             server.send_message(msg)
+            print("Email sent!")
 
         print("Email sent successfully!")
 
@@ -34,7 +38,7 @@ def send_email_with_attachment(smtp_server, port, sender_email, sender_password,
 smtp_server = 'smtp.gmail.com'  # For Gmail SMTP server
 port = 465  # SSL port
 sender_email = 'tejasdesh01@gmail.com'
-sender_password = os.getenv('EMAIL_PASSWORD')  # Use environment variable for password
+sender_password = "" 
 recipient_email = 'tejassdesh07@gmail.com'
 subject = 'Excel File Attachment'
 body = 'Please find the attached Excel file.'
