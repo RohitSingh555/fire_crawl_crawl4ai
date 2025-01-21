@@ -5,7 +5,8 @@ import requests
 from bs4 import BeautifulSoup
 from openai import OpenAI
 from dotenv import load_dotenv
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FuturesTimeoutError
+import time
 
 load_dotenv()
 
@@ -28,7 +29,8 @@ headers = {
 
 def extract_article_data(url):
     try:
-        response = requests.get(url, headers=headers)
+        # Set a timeout of 10 seconds for the request to avoid hanging
+        response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
         soup = BeautifulSoup(response.content, 'html.parser')
         title = soup.find('h1').get_text(strip=True) if soup.find('h1') else "No Title Found"
@@ -108,15 +110,19 @@ def verify_fire_incident(title, content, date, url):
         {"role": "user", "content": prompt}
     ]
 
-    ai_response = client.chat.completions.create(
-        model='gpt-4o-mini',
-        messages=messages,
-        temperature=0,
-    )
+    try:
+        ai_response = client.chat.completions.create(
+            model='gpt-4o-mini',
+            messages=messages,
+            temperature=0,
+        )
 
-    answer = ai_response.choices[0].message.content.strip()
-    print(answer)
-    return answer
+        answer = ai_response.choices[0].message.content.strip()
+        print(answer)
+        return answer
+    except Exception as e:
+        print(f"Error with OpenAI API: {e}")
+        return "no"
 
 
 def process_url(url):
@@ -162,9 +168,12 @@ def process_urls_from_json(input_json_file, output_json_file):
                 futures.append(executor.submit(process_url, url))
 
         for future in as_completed(futures):
-            article_data = future.result()
-            if article_data:
-                results.append(article_data)
+            try:
+                article_data = future.result(timeout=30)  # Set timeout for each future task
+                if article_data:
+                    results.append(article_data)
+            except FuturesTimeoutError:
+                print("A URL processing timed out.")
 
     with open(output_json_file, 'w') as json_file:
         json.dump(results, json_file, indent=4)

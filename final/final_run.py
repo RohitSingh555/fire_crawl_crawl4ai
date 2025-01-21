@@ -32,6 +32,9 @@ def run_all_scripts_and_merge_urls():
     scripts = [
         "news3.py",  
         "abcnews.py",     
+        "abc7.py",     
+        "cbc.py",     
+        "conventry.py",     
         "scrapping_urls.py",     
     ]
     
@@ -40,7 +43,10 @@ def run_all_scripts_and_merge_urls():
 
     urls_from_scripts = [
         "combined_fire_urls.json",  
-        "news_urls.json",    
+        "news_urls.json", 
+        "output1.json",   
+        "output2.json",   
+        "output3.json",   
         "fire_urls.json",    
     ]
     

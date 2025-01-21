@@ -1,57 +1,72 @@
+
+
+
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
 import json
-from concurrent.futures import ThreadPoolExecutor, as_completed
+import random
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
+# List of websites to scrape (add as many as needed)
+# List of websites to scrape
 websites = [
-    "https://www.cbsnews.com/",
-    "https://local12.com/",
-    "https://www.wtnh.com/",
-    "https://www.cbs17.com/",
-    "https://abc7.com/",
-    "https://www.wbir.com/",
-    "https://www.wcvb.com/",
-    "https://www.knoxnews.com/",
-    "https://westchester.news12.com/",
-    "https://www.yahoo.com/",
-    "https://www.wfmz.com/",
-    "https://news4sanantonio.com/",
-    "https://www.wivb.com/",
-    "https://www.nbcconnecticut.com/",
-    "https://www.alexcityoutlook.com/",
-    "https://www.annistonstar.com/",
-    "https://www.al.com/",
+    "https://local12.com/search?find=fire",
+    "https://www.wtnh.com/?submit&s=fire&orderby=modified",
+    "https://www.wtnh.com/page/2/?submit&s=fire&orderby=modified",
+    "https://www.wtnh.com/page/3/?submit&s=fire&orderby=modified",
+    "https://www.cbs17.com/?submit=&s=fire&orderby=modified",
+    "https://www.cbs17.com/page/2/?submit&s=fire&orderby=modified",
+    "https://www.cbs17.com/page/3/?submit&s=fire&orderby=modified",
+    "https://www.wbir.com/search?q=fire",
+    "https://www.wcvb.com/search?q=fire",
+    "https://www.knoxnews.com/search/?q=fire",
+    "https://westchester.news12.com/search?q=fire",
+    "https://news.search.yahoo.com/search;_ylt=Awr49x4ZYo9n_h0Vbm1XNyoA;_ylu=Y29sbwNncTEEcG9zAzEEdnRpZAMEc2VjA3BpdnM-?p=fire&fr2=piv-web&fr=yfp-t",
+    "https://www.wfmz.com/search/?tncms_csrf_token=9c51ff51bf2cf19944d9f86af1be6dc76529bf174631622b35291cf8e89a0152.a75fc729d122b8f888ed&l=25&s=start_time&sd=desc&nfl=sponsored%2Cap&f=html&t=article%2Cvideo%2Cyoutube%2Ccollection&app=editorial&nsa=eedition&q=fire",
+    "https://news4sanantonio.com/search?find=fire",
+    "https://www.wivb.com/?submit=&s=fire",
+    "https://www.wivb.com/page/2/?submit&s=fire",
+    "https://www.wivb.com/page/3/?submit&s=fire",
+    "https://www.nbcconnecticut.com/?s=fire",
+    "https://www.alexcityoutlook.com/search/?tncms_csrf_token=38cb207546cbbf67ce54df21e99ec52cc814e062269255bcf55238fb6d1bb16a.bac8c25c99cc38cd1afe&f=html&t=article%2Ccollection%2Cvideo%2Cyoutube&s=start_time&sd=desc&l=100&nsa=eedition&q=fire",
+    "https://www.annistonstar.com/search/?tncms_csrf_token=7b3631921dcccd8e84bcec03f6efb2435f130424c58dea543300a0fbd080a5fc.f71cbcec705b30847963&f=html&t=article%2Ccollection%2Cvideo%2Cyoutube&s=start_time&sd=desc&l=50&nsa=eedition&q=fire",
+    "https://www.al.com/search/?q=fire",
     "https://cullmantimes.com/",
-    "https://www.sfexaminer.com/",
-    "https://www.decaturdaily.com/",
-    "https://www.hartselleenquirer.com/",
-    "https://www.mountaineagle.com/",
-    "https://thehomewoodstar.com",
-    "https://www.thearabtribune.com",
-    "https://vestaviavoice.com",
-    "https://hooversun.com",
-    "https://www.themadisonrecord.com",
-    "https://www.tuscaloosanews.com",
-    "https://www.birminghamtimes.com",
-    "https://www.coventrytelegraph.net",
-    "https://www.waaytv.com",
-    "https://www.tallasseetribune.com",
-    "https://www.12news.com",
-    "https://www.phoenixnewtimes.com",
-    "https://www.themesatribune.com",
-    "https://www.tempenews.com",
-    "https://www.westvalleyview.com",
-    "https://www.chandlernews.com",
-    "https://www.glendalestar.com",
-    "https://www.yourvalley.net",
-    "https://www.gilbertsunnews.com",
-    "https://flagscanner.com",
-    "https://www.yumanewsnow.com",
-    "https://www.havasunews.com",
-    "https://www.tucsonsentinel.com",
-    "https://www.tucsonlocalmedia.com",
-    "https://www.gvnews.com",
+    "https://www.sfexaminer.com/search/?tncms_csrf_token=6c173170e04fb35026309dedbc0e79e29ccb308ae2bc92b8ae09dc43cd832f98.bf639f5a7fa06d66b3b3&f=html&nfl=WIRE%2C+AP%2Cap&t=article%2Ccollection%2Cvideo%2Cyoutube&s=start_time&sd=desc&l=100&nsa=eedition&q=fire",
+    "https://www.decaturdaily.com/search/?tncms_csrf_token=98d0a72c8551bd8539b44da0d36e8ffde159a90030d77c8ef2921eb124cfc803.5b5b8a6ecbcf64716541&f=html&s=start_time&sd=desc&l=100&nsa=eedition&q=fire",
+    "https://www.hartselleenquirer.com/?showResults=1&Action=Search&Archive=False&Order=Desc&y=2025&from_date=&to_date=&type_get_category=all&orderby_from_url=most_recent&s=fire",
+    "https://www.mountaineagle.com/search/?tncms_csrf_token=3f57e041ea687a1270ef78e6842fa6b85b7bbeb0393e4059a2da83d39a457613.894bd45963433f0afb1c&f=html&t=article%2Ccollection%2Cvideo%2Cyoutube&s=start_time&sd=desc&l=100&nsa=eedition&q=fire",
+    "https://thehomewoodstar.com/api/search.html?q=fire&sa=",
+    "https://www.thearabtribune.com/search/?tncms_csrf_token=5f10f92161ba234333a90803eda92856e697925b339e78295c91b959c907f284.042826ae48763c554656&f=html&t=article%2Ccollection%2Cvideo%2Cyoutube&s=start_time&sd=desc&l=100&nsa=eedition&q=fire",
+    "https://vestaviavoice.com/api/search.html?q=fire&sa=",
+    "https://hooversun.com/api/search.html?q=fire&sa=",
+   "https://www.themadisonrecord.com/?showResults=1&Action=Search&Archive=False&Order=Desc&y=&from_date=&to_date=&type_get_category=all&orderby_from_url=most_recent&s=fire",
+    "https://www.tuscaloosanews.com/search/?q=fire",
+    "https://www.birminghamtimes.com/?s=fire",
+    "https://www.birminghamtimes.com/page/2/?s=fire",
+    "https://www.coventrytelegraph.net/search/?q=fire",
+    "https://www.waaytv.com/search/?q=fire",
+    "https://www.waaytv.com/search/?tncms_csrf_token=edcec01c09f6cdce362b1f23712365e4ab40fa37e2acf148be402391590fb167.4edfbd9186e3909de5f6&nfl=advertorial&s=start_time&sd=desc&l=100&nsa=eedition&q=fire",
+    "https://www.tallasseetribune.com/search/?q=fire",
+    "hhttps://www.tallasseetribune.com/search/?tncms_csrf_token=33cf81a0eaacbaa1ef4cb57a3cb7d93d11a0486f916a1c78344f2ea63edf5a56.061543b9791b86f709d1&sd=desc&l=100&nsa=eedition&q=fire",
+    "https://www.12news.com/search?q=fire",
+    "https://www.phoenixnewtimes.com/phoenix/Search?keywords=fire",
+    "https://www.themesatribune.com/search/?q=fire",
+    "https://www.tempenews.com/search/?q=fire",
+    "https://www.tempenews.com/search/?tncms_csrf_token=b15838982d1bb317b7f565e2b3e40f7fdb3426188b63b31933c81d96e18c7f67.fd818ded5f384b132466&s=start_time&sd=desc&l=100&nsa=eedition&q=fire",
+    "https://www.westvalleyview.com/search/?q=fire",
+    "https://www.chandlernews.com/search/?q=fire",
+    "https://www.glendalestar.com/search/?q=fire",
+    "https://www.yourvalley.net/search/?q=fire",
+    "https://www.gilbertsunnews.com/search/?q=fire",
+    "https://flagscanner.com/?s=fire",
+    "https://www.yumanewsnow.com/search/?q=fire",
+    "https://www.havasunews.com/search/?q=fire",
+    "https://www.tucsonsentinel.com/search/?q=fire",
+    "https://www.tucsonlocalmedia.com/search/?q=fire",
+    "https://www.gvnews.com/search/?q=fire",
     "https://www.myheraldreview.com",
     "https://www.cityofjacksonville.net",
     "https://www.guardonline.com/",
@@ -305,10 +320,53 @@ websites = [
 ]
 
 
-fire_keywords = ['fire', 'smoke', 'blazing', 'wildfire', 'flame', 'burn', 'incendio', 'emergency', 'rescue', 'firefighter']
+# List of fire-related keywords
+fire_keywords = [
+    'fire', 'smoke', 'blazing', 'wildfire', 'flame', 'burn', 'incendio', 'emergency', 'rescue',
+    'firefighter', 'explosion', 'heat', 'combustion', 'arson', 'burning', 'evacuation', 'hazard',
+    'inferno', 'wildfires', 'flames', 'firestorm', 'fumes', 'cinder', 'ashes', 'charred',
+    'fireman', 'firefighting', 'firetruck', 'firehouse', 'fire department', 'firefighters', 'control burn',
+    'scorched', 'fire safety', 'heatwave', 'evacuate', 'burnt', 'forest fire', 'smoldering', 'fire escape',
+    'hazardous', 'combustible', 'extinguisher', 'extinguish', 'emergency services', 'heatstroke', 'fireball',
+    'cremation', 'fire hazard', 'emergency response', 'ignition', 'overheating', 'fire drill', 'wildfire smoke',
+    'flame retardant', 'fireproof', 'flameout', 'spontaneous combustion', 'fire alarm', 'arsonist', 'firetrap',
+    'controlled burn', 'firebreak', 'flash fire', 'burnout', 'ignitable', 'gasoline', 'flame thrower', 'wildfire risk',
+    'burn victim', 'ash', 'heat exhaustion', 'fire safety tips', 'fire danger', 'firewatch', 'fire lines',
+    'pyro', 'cauterize', 'thermal burn', 'wildfire containment', 'fire-related injuries', 'carbon monoxide',
+    'fire-fighting equipment', 'forest firefighting', 'blowtorch', 'fire suppressant', 'fire code', 'fire marshal',
+    'emergency evacuation', 'rescue mission', 'boil over', 'flare', 'smoke inhalation', 'fire hazard mitigation',
+    'spontaneous ignition', 'overheated', 'fireline', 'heating oil', 'flue fire', 'pilot light', 'flashover',
+    'controlled fire', 'fire risk assessment', 'fire prevention', 'fire spread', 'heat-resistant', 'flammable',
+    'ignition point', 'fire drill procedure', 'gas leak', 'tinder', 'backburn', 'wet fire', 'fire intensity',
+    'house fire', 'fire service', 'hotspot', 'smoking ban', 'safety protocols', 'evacuations order',
+    'burning embers', 'fire response', 'fire outbreak', 'fire damage', 'high heat', 'fire cloud', 'flash fire risk'
+]
 
+# Add multiple user-agent strings to rotate between
+user_agents = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Edge/91.0.864.59 Safari/537.36',
+    'Mozilla/5.0 (Linux; Android 10; Pixel 3 XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Mobile Safari/537.36'
+]
+
+# Randomly choose a User-Agent for each request
+def get_random_user_agent():
+    return random.choice(user_agents)
+
+# Set headers to include random User-Agent
+headers = {
+    'User-Agent': get_random_user_agent(),
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Connection': 'keep-alive',
+    'Referer': 'https://www.google.com/',
+}
+
+# Check if the page has fire-related content
 def is_fire_related(url, soup):
-
     if any(keyword in url.lower() for keyword in fire_keywords):
         return True
 
@@ -318,39 +376,51 @@ def is_fire_related(url, soup):
 
     return False
 
+# Function to get links from a website
 def get_links_from_website(url):
-    """Fetch all the URLs from anchor tags on a webpage."""
-    try:
-        response = requests.get(url, timeout=10)  
-        response.raise_for_status()  
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
-        if not is_fire_related(url, soup):
-            return url, []  
+    retries = 3
+    for i in range(retries):
+        try:
+            # Make a request to the website
+            response = requests.get(url, headers=headers, timeout=10)
+            response.raise_for_status()  # This will raise an exception for 4xx/5xx errors
 
-        links = set()  
+            soup = BeautifulSoup(response.text, 'html.parser')
 
-        for anchor in soup.find_all('a', href=True):
-            link = anchor['href']
+            # If the content is not fire-related, skip it
+            if not is_fire_related(url, soup):
+                return url, []
 
-            if link.startswith('http'):
-                if any(keyword in link.lower() for keyword in fire_keywords):
-                    links.add(link)
-            elif link.startswith('/'):
-                full_link = url + link
-                if any(keyword in full_link.lower() for keyword in fire_keywords):
-                    links.add(full_link)
-        
-        return url, list(links)
-    
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching {url}: {e}")
-        return url, []
+            base_url = response.url  # Get the base URL of the page
+            links = set()
 
+            # Extract all anchor tags with href attribute
+            for anchor in soup.find_all('a', href=True):
+                link = anchor['href']
+                # Convert relative URLs to absolute URLs
+                full_url = urljoin(base_url, link)
+                clean_link = full_url.split('?')[0]  # Remove query parameters
+
+                # Only add fire-related links
+                if any(keyword in clean_link.lower() for keyword in fire_keywords):
+                    links.add(clean_link)
+
+            return url, list(links)
+
+        except requests.exceptions.RequestException as e:
+            print(f"Error fetching {url}: {e}")
+            if i < retries - 1:
+                wait_time = random.randint(5, 10)  # Wait between 5 and 10 seconds
+                print(f"Retrying in {wait_time} seconds...")
+                time.sleep(wait_time)
+            else:
+                return url, []
+
+# Main function to scrape all websites concurrently
 def main():
     website_data = {}
-    
-    with ThreadPoolExecutor(max_workers=10) as executor:  
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
         futures = {executor.submit(get_links_from_website, website): website for website in websites}
 
         for future in as_completed(futures):
@@ -365,10 +435,11 @@ def main():
             except Exception as exc:
                 print(f"Error processing {website}: {exc}")
 
+    # Save the results to a JSON file
     with open('fire_urls.json', 'w') as json_file:
         json.dump(website_data, json_file, indent=4)
-    
-    print("Fire-related URLs have been saved to 'fire_scraped_urls.json'.")
+
+    print("Fire-related URLs have been saved to 'fire_urls.json'.")
 
 if __name__ == "__main__":
     start_time = time.time()
