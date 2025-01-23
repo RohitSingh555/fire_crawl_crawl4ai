@@ -71,44 +71,48 @@ def extract_article_data(url):
         print(f"Error fetching {url}: {e}")
     return None, None, None
 
-def verify_fire_incident(title, content, date, url):
+def verify_fire_incident(title, content, date, url, country="YourCountry"):
     print(url)
     truncated_content = content[:2000]
+    
+    # Modify the fire incident prompt to include the country filter
     fire_incident_prompt = (
-        "You are an AI tasked with determining whether a news article describes a fire incident. "
-        "A fire incident involves an unintended or accidental fire affecting homes, apartments, buildings, or people. "
-        "This includes fires caused by electrical faults, negligence, accidents, natural disasters (e.g., wildfires), or arson.\n\n"
-        "Please carefully evaluate the content and answer the following:\n\n"
-        "1. Is the article related to a fire incident? Respond with 'yes' if the article describes a fire incident, or 'no' if it does not.\n\n"
-        "3. If the article is not available (e.g., 'Page Not Found' or similar error in the content or Advertisement), respond with 'no'.\n\n"
+        f"A fire incident refers strictly to an unintended or accidental fire that results in damage to physical structures, such as homes, apartments, offices, commercial buildings, factories, or any infrastructure, within the United States. "
+        "The fire must have caused structural damage or destruction and can be due to causes such as electrical faults, negligence, accidents, natural disasters (e.g., wildfires), or arson.\n\n"
+        "Please carefully evaluate the article content and respond according to the following criteria:\n\n"
+        "1. Does the article explicitly mention fire-related damage to physical structures? Respond with 'yes' only if structural damage (e.g., destruction, partial damage, collapse, repairs needed) is clearly described. Otherwise, respond with 'no'.\n\n"
+        "2. If the article is not available (e.g., 'Page Not Found' or similar error messages in the content or advertisements), respond with 'no'.\n\n"
         f"Title: {title}\nContent: {truncated_content}\nURL: {url}\nDate passed: {date}\n\n"
-        "Please ensure that your responses are clear, concise, and formatted as described."
+        "Ensure your response is clear and strictly follows the criteria outlined above."
     )
 
     no_date_prompt = (
-        "You are an AI tasked with determining whether a news article describes a fire incident. "
-        "A fire incident involves an unintended or accidental fire affecting homes, apartments, buildings, or people. "
-        "This includes fires caused by electrical faults, negligence, accidents, natural disasters (e.g., wildfires), or arson.\n\n"
-        "Please carefully evaluate the content and answer the following:\n\n"
-        "1. Is the article related to a fire incident? Respond with 'yes' if the article describes a fire incident, or 'no' if it does not.\n\n"
-        "2. Since no date was passed, please follow these steps to extract the publication date from the article:\n"
+        f"A fire incident refers strictly to an unintended or accidental fire that results in damage to physical structures, such as homes, apartments, offices, commercial buildings, factories, or any infrastructure, within the United States. "
+        "The fire must have caused structural damage or destruction and can be due to causes such as electrical faults, negligence, accidents, natural disasters (e.g., wildfires), or arson.\n\n"
+        "Please carefully evaluate the article content and respond according to the following criteria:\n\n"
+        "1. Does the article explicitly mention fire-related damage to physical structures? Respond with 'yes' only if structural damage (e.g., destruction, partial damage, collapse, repairs needed) is clearly described. Otherwise, respond with 'no'.\n\n"
+        "2. Since no date was provided, please follow these steps to extract the publication date from the article:\n"
         "   - First, check the URL for a date in the format 'dd-mm-yyyy'.\n"
-        "   - If no date is found in the URL, search the content for the most recent date. If a date is found, return it in 'dd-mm-yyyy' format.\n"
-        "   - If no date can be found, respond with 'Date not available'.\n\n"
-        "3. If the article is not available (e.g., 'Page Not Found' or similar error in the content), respond with 'no'.\n\n"
+        "   - If no date is found in the URL, search the article content for the most recent date. If found, return it in 'dd-mm-yyyy' format.\n"
+        "   - If no date is available, respond with 'Date not available'.\n\n"
+        "3. If the article is not available (e.g., 'Page Not Found' or similar error messages), respond with 'no'.\n\n"
         f"Title: {title}\nContent: {truncated_content}\nURL: {url}\nDate passed: {date}\n\n"
-        "Please ensure that your responses are clear, concise, and formatted as described."
+        "Ensure your response is clear and strictly follows the criteria outlined above."
     )
 
     if date and date != "Date not available":
-        prompt = fire_incident_prompt 
+        prompt = fire_incident_prompt
     else:
-        prompt = no_date_prompt  
+        prompt = no_date_prompt
 
     messages = [
-        {"role": "system", "content": "You are an AI that determines if news articles are about fire incidents."},
+        {
+            "role": "system",
+            "content": "You are an AI tasked with evaluating news articles to determine if they describe fire incidents causing structural damage. Only articles explicitly mentioning damage to physical structures within the United States should be considered relevant."
+        },
         {"role": "user", "content": prompt}
     ]
+
 
     try:
         ai_response = client.chat.completions.create(
