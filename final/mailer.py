@@ -38,9 +38,9 @@ def send_email_with_attachment(smtp_server, port, sender_email, sender_password,
 smtp_server = 'smtp.gmail.com'  # For Gmail SMTP server
 port = 465  # SSL port
 sender_email = 'tejasdesh01@gmail.com'
-sender_password = "" 
-recipient_email = 'tejassdesh07@gmail.com'
-subject = 'Excel File Attachment'
+sender_password = "wecf bdwo hdvt ayxk"
+recipient_email = 'tejassdesh07@gmail.com, unipaney@dhaninfo.biz, u@agilemorph.biz, rchakraborty@dhaninfo.biz, npalliwal@dhaninfo.biz, lalit.shukla@dhaninfo.biz, rnagmote@dhaninfo.biz, apandey@dhaninfo.biz'
+subject = 'Excel File Attachment of Fire News'
 body = 'Please find the attached Excel file.'
 file_path = 'filtered_fire_incidents2.xlsx'
 
