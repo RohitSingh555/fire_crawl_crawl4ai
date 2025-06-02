@@ -92,7 +92,7 @@ def fetch_news_content(news_urls):
     for source, urls in news_urls.items():
         for url in urls:
             try:
-                print(f"[📰] Scraping news article: {url}")
+                # print(f"[📰] Scraping news article: {url}")
                 headers = {"User-Agent": ua.random}
                 response = requests.get(url, headers=headers, timeout=10)
                 soup = BeautifulSoup(response.text, "html.parser")

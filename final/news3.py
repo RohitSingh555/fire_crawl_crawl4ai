@@ -1,3 +1,4 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 from openpyxl import Workbook
@@ -158,8 +159,9 @@ for page in range(1, 6):
 
 scrape_fire_news(websites)
 
-with open('combined_fire_urls.json', 'w') as json_file:
+with open(os.path.join("all_jsons", "combined_fire_urls.json"), 'w') as json_file:
     json.dump(url_dict, json_file, indent=4)
 
 print("Scraping complete and data saved to combined_fire_articles.xlsx")
-print("URLs saved to combined_fire_urls.json.")
+print("URLs saved to all_jsons/combined_fire_urls.json.")
+

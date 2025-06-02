@@ -6,7 +6,7 @@ import os
 def run_script(script_name):
     try:
         print(f"Running {script_name}...")
-        subprocess.run(['python', script_name], check=True)  # Run the script
+        subprocess.run(['python3.12', script_name], check=True)  # Run the script
         print(f"{script_name} executed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"Error running {script_name}: {e}")
@@ -36,6 +36,8 @@ def run_all_scripts_and_merge_urls():
         "cbc.py",     
         "conventry.py",     
         "scrapping_urls.py",     
+        "search_engine.py",     
+        # "new_scrapper.py",     
     ]
     
     for script in scripts:
@@ -47,7 +49,9 @@ def run_all_scripts_and_merge_urls():
         "output1.json",   
         "output2.json",   
         "output3.json",   
-        "fire_urls.json",    
+        "fire_urls.json",   
+        "news_links.json",
+        "fire_news_urls1.json"
     ]
     
     merged_urls = {}
@@ -62,13 +66,15 @@ def run_all_scripts_and_merge_urls():
     for domain, url_list in merged_urls.items():
         merged_urls[domain] = list(set(url_list))  # Remove duplicates
 
-    save_json(merged_urls, 'fire_scraped_urls.json')
+    save_json(merged_urls, os.path.join('all_jsons', 'fire_scraped_urls.json'))
 
     # Run verification.py after merging
     run_script("verification.py")
 
     # Run excel.py after verification
     run_script("excel.py")
+
+    # run_script("mailer.py")
 
 # Call the function to run all scripts and merge URLs
 run_all_scripts_and_merge_urls()

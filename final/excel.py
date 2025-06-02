@@ -15,8 +15,9 @@ def has_invalid_characters(text):
             return True
     return False
 
-with open('fire_incident_results.json', 'r') as file:
+with open('all_jsons/fire_incident_results.json', 'r') as file:
     fire_incident_results = json.load(file)
+
 
 today = datetime.today()
 yesterday = today - timedelta(days=1)

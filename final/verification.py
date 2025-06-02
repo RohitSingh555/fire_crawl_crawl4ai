@@ -185,6 +185,10 @@ def process_urls_from_json(input_json_file, output_json_file):
     print(f"Processing complete. Results saved to {output_json_file}")
 
 if __name__ == "__main__":
-    input_json_file = "fire_scraped_urls.json"  
-    output_json_file = "fire_incident_results.json"  
+    os.makedirs("all_jsons", exist_ok=True) 
+
+    input_json_file = os.path.join("all_jsons", "fire_scraped_urls.json")
+    output_json_file = os.path.join("all_jsons", "fire_incident_results.json")
+    
     process_urls_from_json(input_json_file, output_json_file)
+
