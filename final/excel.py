@@ -43,8 +43,6 @@ for item in fire_incident_results:
     url = item.get("URL")
    
     description = item.get("Description", "")
-    if has_invalid_characters(description):
-        continue
     
     if parsed_date and (parsed_date.date() == today.date() or parsed_date.date() == yesterday.date()):
         channel = extract_channel(url)

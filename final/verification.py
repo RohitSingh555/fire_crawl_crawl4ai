@@ -27,10 +27,62 @@ headers = {
 }
 
 
-def extract_article_data(url):
+# Function to fetch proxies from the ProxyScrape API
+def fetch_proxies():
+    url = "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all"
+    try:
+        print("Fetching proxies from ProxyScrape API...")
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        proxies = [proxy.strip() for proxy in response.text.splitlines() if proxy.strip()]
+        print(f"Fetched {len(proxies)} proxies.")
+        return proxies
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching proxies: {e}")
+        return []
+
+
+# Function to test a single proxy
+def test_proxy(proxy):
+    try:
+        print(f"Testing proxy: {proxy}")
+        response = requests.get(
+            "https://httpbin.org/ip",
+            proxies={"http": f"http://{proxy}", "https": f"http://{proxy}"},
+            timeout=5,
+        )
+        if response.status_code == 200:
+            print(f"✅ Proxy {proxy} is valid.")
+            return {"http": f"http://{proxy}", "https": f"http://{proxy}"}
+    except Exception as e:
+        print(f"❌ Proxy {proxy} failed: {e}")
+    return None
+
+
+# Fetch and test proxies to create a list of up to 10 valid proxies
+def initialize_proxies():
+    print("Initializing proxies...")
+    proxies = fetch_proxies()
+    valid_proxies = []
+    for proxy in proxies:
+        if len(valid_proxies) >= 3:  # Stop once we have 10 valid proxies
+            break
+        valid_proxy = test_proxy(proxy)
+        if valid_proxy:
+            valid_proxies.append(valid_proxy)
+    if valid_proxies:
+        print(f"Valid proxies initialized: {valid_proxies}")
+    else:
+        print("No valid proxies found. Requests will be sent directly.")
+    return valid_proxies
+
+# Initialize list of valid proxies
+valid_proxies = initialize_proxies()
+
+def extract_article_data(url, proxy=None):
     try:
         # Set a timeout of 10 seconds for the request to avoid hanging
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=headers, proxies=proxy, timeout=10)
         response.raise_for_status()
         soup = BeautifulSoup(response.content, 'html.parser')
         title = soup.find('h1').get_text(strip=True) if soup.find('h1') else "No Title Found"
@@ -66,9 +118,8 @@ def extract_article_data(url):
                 break
         
         return title, content, date
-
     except requests.exceptions.RequestException as e:
-        print(f"Error fetching {url}: {e}")
+        print(f"Error fetching {url} with proxy {proxy}: {e}")
     return None, None, None
 
 def verify_fire_incident(title, content, date, url, country="YourCountry"):
@@ -134,36 +185,43 @@ def process_url(url):
         print(f"Skipping URL due to short length: {url}")
         return None
     try:
-        title, content, date = extract_article_data(url)
-        
-        if not title or not content:
-            return None
-       
-        result = verify_fire_incident(title, content, date, url)
-       
-        if 'yes' in result.lower():
-            if date:
-                pass
-            else:
-                date_match = re.search(r'\d{2}-\d{2}-\d{4}', result)
-                date = date_match.group(0) if date_match else 'Date not available'
-            
-            article_data = {
-                'Title': title,
-                'Description': content[:500], 
-                'Date': date,
-                'URL': url
-            }
-            return article_data
+        retries = 2
+        for attempt in range(retries):
+            proxy = valid_proxies[attempt % len(valid_proxies)] if valid_proxies else None
+            title, content, date = extract_article_data(url, proxy)
+            if title and content:
+                result = verify_fire_incident(title, content, date, url)
+                if 'yes' in result.lower():
+                    if date:
+                        pass
+                    else:
+                        date_match = re.search(r'\d{2}-\d{2}-\d{4}', result)
+                        date = date_match.group(0) if date_match else 'Date not available'
+                    
+                    article_data = {
+                        'Title': title,
+                        'Description': content[:500], 
+                        'Date': date,
+                        'URL': url
+                    }
+                    return article_data
+            print(f"Retrying URL with a different proxy: {url}")
+        print(f"Skipping URL after {retries} retries: {url}")
     except Exception as e:
         print(f"Error processing {url}: {e}")
     return None
 
 def process_urls_from_json(input_json_file, output_json_file):
+    if not valid_proxies:
+        print("No valid proxies available. Skipping URL processing.")
+        return
+
     with open(input_json_file, 'r') as json_file:
         urls_data = json.load(json_file)
 
-    results = []
+    # Clear the output file before saving results
+    with open(output_json_file, 'w') as json_file:
+        json_file.write('[]')  # Write an empty JSON array to clear the file
 
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = []
@@ -175,12 +233,14 @@ def process_urls_from_json(input_json_file, output_json_file):
             try:
                 article_data = future.result(timeout=30)  # Set timeout for each future task
                 if article_data:
-                    results.append(article_data)
+                    # Save the result incrementally
+                    with open(output_json_file, 'r+') as json_file:
+                        existing_results = json.load(json_file)
+                        existing_results.append(article_data)
+                        json_file.seek(0)
+                        json.dump(existing_results, json_file, indent=4)
             except FuturesTimeoutError:
-                print("A URL processing timed out.")
-
-    with open(output_json_file, 'w') as json_file:
-        json.dump(results, json_file, indent=4)
+                print(f"A URL processing timed out.")
 
     print(f"Processing complete. Results saved to {output_json_file}")
 

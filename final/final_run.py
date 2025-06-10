@@ -74,7 +74,7 @@ def run_all_scripts_and_merge_urls():
     # Run excel.py after verification
     run_script("excel.py")
 
-    # run_script("mailer.py")
+    run_script("mailer.py")
 
 # Call the function to run all scripts and merge URLs
 run_all_scripts_and_merge_urls()

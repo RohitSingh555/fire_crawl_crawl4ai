@@ -8,8 +8,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # List of websites to scrape
 websites = [
-    "https://baldwintimes.com/",
-    "https://www.valdostadailytimes.com",
+    "https://baldwintimes.com/search?q=fire",
+    "https://www.valdostadailytimes.com/site-search/?q=fire#gsc.tab=0&gsc.q=fire&gsc.page=1",
     "https://www.northwestgeorgianews.com/catoosa_walker_news/",
     "https://www.northwestgeorgianews.com",
     "https://www.chathamcountyga.gov/News",
@@ -436,7 +436,53 @@ user_agents = [
 def get_random_user_agent():
     return random.choice(user_agents)
 
-# Set headers to include random User-Agent
+# Function to fetch proxies from the ProxyScrape API
+def fetch_proxies():
+    url = "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all"
+    try:
+        print("Fetching proxies from ProxyScrape API...")
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+
+        # Parse the response text into a list of proxies
+        proxies = [proxy.strip() for proxy in response.text.splitlines() if proxy.strip()]
+        print(f"Fetched {len(proxies)} proxies.")
+        return proxies
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching proxies: {e}")
+        return []
+
+# Function to test a single proxy
+def test_proxy(proxy):
+    try:
+        print(f"Testing proxy: {proxy}")
+        response = requests.get(
+            "https://httpbin.org/ip",
+            proxies={"http": f"http://{proxy}", "https": f"http://{proxy}"},
+            timeout=5,
+        )
+        if response.status_code == 200:
+            print(f"✅ Proxy {proxy} is valid.")
+            return {"http": f"http://{proxy}", "https": f"http://{proxy}"}
+    except Exception as e:
+        print(f"❌ Proxy {proxy} failed: {e}")
+    return None
+
+# Fetch and test proxies until a valid one is found
+def initialize_proxy():
+    print("Initializing proxies...")
+    proxies = fetch_proxies()
+    for proxy in proxies:
+        valid_proxy = test_proxy(proxy)
+        if valid_proxy:
+            print(f"Using proxy: {valid_proxy}")
+            return valid_proxy
+    print("No valid proxies found. Requests will be sent directly.")
+    return None
+
+# Replace the static proxy list with a single valid proxy
+proxy = initialize_proxy()
 
 # Check if the page has fire-related content
 def is_fire_related(url, soup):
@@ -463,14 +509,18 @@ def get_links_from_website(url):
                 'Referer': 'https://www.google.com/',
             }
 
-            # Make a request to the website
-            response = requests.get(url, headers=headers, timeout=10)
+            print(f"Sending request to {url} with proxy: {proxy}")
+
+            # Make a request to the website using the proxy
+            response = requests.get(url, headers=headers, proxies=proxy, timeout=10)
+            print(f"Request sent to {url} with proxy {proxy}")
             response.raise_for_status()  # This will raise an exception for 4xx/5xx errors
 
             soup = BeautifulSoup(response.text, 'html.parser')
 
             # If the content is not fire-related, skip it
             if not is_fire_related(url, soup):
+                print(f"Skipping {url} (no fire-related content found).")
                 return url, []
 
             base_url = response.url  # Get the base URL of the page
@@ -487,15 +537,17 @@ def get_links_from_website(url):
                 if any(keyword in clean_link.lower() for keyword in fire_keywords):
                     links.add(clean_link)
 
+            print(f"Scraped {len(links)} fire-related links from {url}")
             return url, list(links)
 
         except requests.exceptions.RequestException as e:
-            print(f"Error fetching {url}: {e}")
+            print(f"Error fetching {url} with proxy {proxy}: {e}")
             if i < retries - 1:
                 wait_time = random.randint(5, 10)  # Wait between 5 and 10 seconds
                 print(f"Retrying in {wait_time} seconds...")
                 time.sleep(wait_time)
             else:
+                print(f"Failed to fetch {url} after {retries} retries.")
                 return url, []
 
 # Main function to scrape all websites concurrently
