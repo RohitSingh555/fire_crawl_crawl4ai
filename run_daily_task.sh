@@ -1,10 +1,26 @@
 #!/bin/bash
 
-# Navigate to your project directory
-cd fi
+# Fire Incident Daily Task Runner
+# Simple script to run the complete fire incident pipeline
 
-# Activate the virtual environment if you're using one (optional)
-source /path/to/your/venv/bin/activate
+echo "🔥 Fire Incident Daily Task Runner"
+echo "=================================="
+echo "Starting at: $(date)"
+echo ""
 
-# Run your Python script
-python3 /path/to/your/script.py
+# Navigate to src directory
+cd /root/fire_crawl_crawl4ai/src
+
+# Activate virtual environment
+echo "🔧 Activating virtual environment..."
+source venv/bin/activate
+
+# Run the main pipeline
+echo "🚀 Running Fire Incident Pipeline..."
+python fire_incident_pipeline.py
+
+# Deactivate virtual environment
+deactivate
+
+echo ""
+echo "🏁 Pipeline execution completed at: $(date)"

@@ -1,126 +1,329 @@
 import os
 import json
 import re
+import asyncio
 import requests
 from bs4 import BeautifulSoup
 from openai import OpenAI
 from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as FuturesTimeoutError
+from playwright.async_api import async_playwright
 import time
+import random
+from urllib.parse import urlparse
+import subprocess
+import sys
 
 load_dotenv()
 
 client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+
+# User agents for rotation
+USER_AGENTS = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15',
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+]
+
+# Headers for requests
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
     'Accept-Language': 'en-US,en;q=0.5',
     'Accept-Encoding': 'gzip, deflate, br',
     'Connection': 'keep-alive',
     'Upgrade-Insecure-Requests': '1',
-    'TE': 'Trailers',
-    'Cache-Control': 'max-age=0',
-    'Pragma': 'no-cache',
-    'DNT': '1',
-    'X-Requested-With': 'XMLHttpRequest',
-    'If-None-Match': 'W/"35-f6dpDOfTQUZECdaBBhKg+W5fEz0"'
+    'Cache-Control': 'max-age=0'
 }
 
-
-# Function to fetch proxies from the ProxyScrape API
-def fetch_proxies():
-    url = "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=10000&country=all&ssl=all&anonymity=all"
+def get_domain(url):
+    """Extract domain from URL"""
     try:
-        print("Fetching proxies from ProxyScrape API...")
-        response = requests.get(url, timeout=10)
+        return urlparse(url).netloc
+    except:
+        return "unknown"
+
+def requests_scrape(url, timeout=15):
+    """Method 1: Simple requests scraping"""
+    try:
+        headers = HEADERS.copy()
+        headers['User-Agent'] = random.choice(USER_AGENTS)
+        
+        response = requests.get(url, headers=headers, timeout=timeout, allow_redirects=True)
         response.raise_for_status()
-        proxies = [proxy.strip() for proxy in response.text.splitlines() if proxy.strip()]
-        print(f"Fetched {len(proxies)} proxies.")
-        return proxies
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching proxies: {e}")
-        return []
-
-
-# Function to test a single proxy
-def test_proxy(proxy):
-    try:
-        print(f"Testing proxy: {proxy}")
-        response = requests.get(
-            "https://httpbin.org/ip",
-            proxies={"http": f"http://{proxy}", "https": f"http://{proxy}"},
-            timeout=5,
-        )
-        if response.status_code == 200:
-            print(f"✅ Proxy {proxy} is valid.")
-            return {"http": f"http://{proxy}", "https": f"http://{proxy}"}
+        
+        if len(response.content) > 1000:  # Basic content check
+            return response.text
     except Exception as e:
-        print(f"❌ Proxy {proxy} failed: {e}")
+        print(f"    Requests failed: {e}")
     return None
 
-
-# Fetch and test proxies to create a list of up to 10 valid proxies
-def initialize_proxies():
-    print("Initializing proxies...")
-    proxies = fetch_proxies()
-    valid_proxies = []
-    for proxy in proxies:
-        if len(valid_proxies) >= 3:  # Stop once we have 10 valid proxies
-            break
-        valid_proxy = test_proxy(proxy)
-        if valid_proxy:
-            valid_proxies.append(valid_proxy)
-    if valid_proxies:
-        print(f"Valid proxies initialized: {valid_proxies}")
-    else:
-        print("No valid proxies found. Requests will be sent directly.")
-    return valid_proxies
-
-# Initialize list of valid proxies
-valid_proxies = initialize_proxies()
-
-def extract_article_data(url, proxy=None):
+async def playwright_scrape(url, timeout=30):
+    """Method 2: Playwright scraping with stealth"""
     try:
-        # Set a timeout of 10 seconds for the request to avoid hanging
-        response = requests.get(url, headers=headers, proxies=proxy, timeout=10)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.content, 'html.parser')
-        title = soup.find('h1').get_text(strip=True) if soup.find('h1') else "No Title Found"
-        paragraphs = soup.find_all('p')
-        content = ' '.join([para.get_text(strip=True) for para in paragraphs])
-        date = None
-        possible_date_tags = [
-            ('time', 'datetime'),
-            ('meta', 'content'),
-            ('span', None),
-            ('div', None),
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(
+                headless=True,
+                args=[
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--disable-accelerated-2d-canvas',
+                    '--no-first-run',
+                    '--no-zygote',
+                    '--disable-gpu'
+                ]
+            )
+            
+            context = await browser.new_context(
+                user_agent=random.choice(USER_AGENTS),
+                viewport={'width': 1920, 'height': 1080},
+                extra_http_headers=HEADERS
+            )
+            
+            page = await context.new_page()
+            
+            # Set longer timeout and wait for content
+            await page.goto(url, timeout=timeout*1000, wait_until='domcontentloaded')
+            await asyncio.sleep(3)  # Wait for JS to load
+            
+            # Try to wait for content
+            selectors = ['h1', 'h2', 'p', 'article', '.content', '.article', 'body']
+            for selector in selectors:
+                try:
+                    await page.wait_for_selector(selector, timeout=5000)
+                    break
+                except:
+                    continue
+            
+            html = await page.content()
+            await browser.close()
+            
+            if html and len(html) > 1000:
+                return html
+                
+    except Exception as e:
+        print(f"    Playwright failed: {e}")
+    return None
+
+def selenium_scrape(url, timeout=30):
+    """Method 3: Selenium scraping as fallback"""
+    try:
+        from selenium import webdriver
+        from selenium.webdriver.chrome.options import Options
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.support.ui import WebDriverWait
+        from selenium.webdriver.support import expected_conditions as EC
+        
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument(f'--user-agent={random.choice(USER_AGENTS)}')
+        
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.set_page_load_timeout(timeout)
+        
+        driver.get(url)
+        
+        # Wait for content to load
+        try:
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.TAG_NAME, "body"))
+            )
+        except:
+            pass
+        
+        html = driver.page_source
+        driver.quit()
+        
+        if html and len(html) > 1000:
+            return html
+            
+    except Exception as e:
+        print(f"    Selenium failed: {e}")
+    return None
+
+def curl_scrape(url, timeout=30):
+    """Method 4: Curl as last resort"""
+    try:
+        user_agent = random.choice(USER_AGENTS)
+        cmd = [
+            'curl', '-s', '-L', '--max-time', str(timeout),
+            '-H', f'User-Agent: {user_agent}',
+            '-H', 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            '-H', 'Accept-Language: en-US,en;q=0.5',
+            '-H', 'Accept-Encoding: gzip, deflate',
+            '-H', 'Connection: keep-alive',
+            '--compressed',
+            url
         ]
         
-        for tag, attr in possible_date_tags:
-            elements = soup.find_all(tag)
-            for element in elements:
-                text = element.get_text(strip=True) if not attr else element.get(attr)
-                if text:
-                    date_patterns = [
-                        r'\d{1,2}:\d{2} [APM]{2} [A-Za-z]{3} \d{1,2}, \d{4}',
-                        r'[A-Za-z]{3} \d{1,2}, \d{4}',
-                        r'[A-Za-z]{4,9} \d{1,2}, \d{4}',
-                        r'\d{1,2} [A-Za-z]{3} \d{1,4}, \d{4}',
-                        r'\d{4}-\d{2}-\d{2}',
-                    ]
-                    for pattern in date_patterns:
-                        if re.search(pattern, text):
-                            date = text
-                            break
-                if date:
-                    break
-            if date:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout+5)
+        
+        if result.returncode == 0 and len(result.stdout) > 1000:
+            return result.stdout
+            
+    except Exception as e:
+        print(f"    Curl failed: {e}")
+    return None
+
+def universal_scrape(url):
+    """
+    Universal scraper that tries multiple methods to ensure any website can be scraped
+    """
+    print(f"🔍 Scraping: {url}")
+    
+    # Method 1: Requests (fastest)
+    print("  Trying requests...")
+    html = requests_scrape(url)
+    if html:
+        print("  ✅ Requests succeeded")
+        return html
+    
+    # Method 2: Playwright (handles JS)
+    print("  Trying Playwright...")
+    try:
+        html = asyncio.run(playwright_scrape(url))
+        if html:
+            print("  ✅ Playwright succeeded")
+            return html
+    except Exception as e:
+        print(f"  ❌ Playwright error: {e}")
+    
+    # Method 3: Selenium (fallback)
+    print("  Trying Selenium...")
+    html = selenium_scrape(url)
+    if html:
+        print("  ✅ Selenium succeeded")
+        return html
+    
+    # Method 4: Curl (last resort)
+    print("  Trying curl...")
+    html = curl_scrape(url)
+    if html:
+        print("  ✅ Curl succeeded")
+        return html
+    
+    print("  ❌ All methods failed")
+    return None
+
+def extract_article_data_from_html(html, url):
+    """Extract title, content, and date from HTML content"""
+    try:
+        soup = BeautifulSoup(html, 'html.parser')
+        
+        # Extract title - try multiple selectors
+        title = None
+        title_selectors = [
+            'h1', 'h1.article-title', 'h1.headline', 'h1.story-title',
+            'h2.video-info-module__text--title', '.article-title', '.headline',
+            'title', '.title', '.post-title', '.entry-title'
+        ]
+        
+        for selector in title_selectors:
+            title_el = soup.select_one(selector)
+            if title_el:
+                title = title_el.get_text(strip=True)
                 break
         
+        if not title:
+            title = "No Title Found"
+        
+        # Extract content - get all paragraphs and text content
+        paragraphs = soup.find_all('p')
+        content_parts = []
+        
+        for p in paragraphs:
+            text = p.get_text(strip=True)
+            if text and len(text) > 20:  # Only meaningful paragraphs
+                content_parts.append(text)
+        
+        # If no paragraphs, try other content selectors
+        if not content_parts:
+            content_selectors = [
+                '.content', '.article-content', '.post-content', '.entry-content',
+                '.story-content', '.article-body', '.post-body', 'article'
+            ]
+            for selector in content_selectors:
+                content_el = soup.select_one(selector)
+                if content_el:
+                    paragraphs = content_el.find_all('p')
+                    for p in paragraphs:
+                        text = p.get_text(strip=True)
+                        if text and len(text) > 20:
+                            content_parts.append(text)
+                    break
+        
+        content = ' '.join(content_parts)
+        
+        # Extract date - try multiple approaches
+        date = None
+        date_selectors = [
+            'time[datetime]', 'time', '.date', '.timestamp', '.published-date',
+            '.article-date', '.story-date', '.post-date', '.entry-date',
+            '.video-info-module__text--subtitle__timestamp'
+        ]
+        
+        for selector in date_selectors:
+            date_el = soup.select_one(selector)
+            if date_el:
+                if date_el.has_attr('datetime'):
+                    date = date_el['datetime']
+                else:
+                    date = date_el.get_text(strip=True)
+                break
+        
+        # If no date found, try to extract from JSON-LD
+        if not date:
+            for script in soup.find_all("script", {"type": "application/ld+json"}):
+                try:
+                    data = json.loads(script.string)
+                    if isinstance(data, dict):
+                        date = data.get("uploadDate") or data.get("datePublished") or data.get("dateCreated")
+                        if date:
+                            break
+                except:
+                    continue
+        
+        # If still no date, try regex patterns in content
+        if not date:
+            date_patterns = [
+                r'\d{1,2}:\d{2} [APM]{2} [A-Za-z]{3} \d{1,2}, \d{4}',
+                r'[A-Za-z]{3} \d{1,2}, \d{4}',
+                r'[A-Za-z]{4,9} \d{1,2}, \d{4}',
+                r'\d{1,2} [A-Za-z]{3} \d{1,4}, \d{4}',
+                r'\d{4}-\d{2}-\d{2}',
+            ]
+            for pattern in date_patterns:
+                match = re.search(pattern, content)
+                if match:
+                    date = match.group()
+                    break
+        
         return title, content, date
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching {url} with proxy {proxy}: {e}")
-    return None, None, None
+        
+    except Exception as e:
+        print(f"Error extracting data from HTML: {e}")
+        return None, None, None
+
+def extract_article_data(url):
+    """Main function to extract article data using universal scraping"""
+    try:
+        # Use universal scraper to get HTML
+        html = universal_scrape(url)
+        if not html:
+            return None, None, None
+        
+        # Extract data from the HTML
+        title, content, date = extract_article_data_from_html(html, url)
+        return title, content, date
+        
+    except Exception as e:
+        print(f"Error fetching {url}: {e}")
+        return None, None, None
 
 def verify_fire_incident(title, content, date, url, country="YourCountry"):
     print(url)
@@ -179,16 +382,18 @@ def verify_fire_incident(title, content, date, url, country="YourCountry"):
         print(f"Error with OpenAI API: {e}")
         return "no"
 
-
 def process_url(url):
+    """Process a single URL using universal scraping"""
     if len(url) <= 30:
         print(f"Skipping URL due to short length: {url}")
         return None
+    
     try:
         retries = 2
         for attempt in range(retries):
-            proxy = valid_proxies[attempt % len(valid_proxies)] if valid_proxies else None
-            title, content, date = extract_article_data(url, proxy)
+            print(f"Processing {url} (attempt {attempt + 1})")
+            title, content, date = extract_article_data(url)
+            
             if title and content:
                 result = verify_fire_incident(title, content, date, url)
                 if 'yes' in result.lower():
@@ -205,16 +410,18 @@ def process_url(url):
                         'URL': url
                     }
                     return article_data
-            print(f"Retrying URL with a different proxy: {url}")
+            
+            if attempt < retries - 1:
+                print(f"Retrying URL: {url}")
+                time.sleep(1)  # Small delay between retries
+        
         print(f"Skipping URL after {retries} retries: {url}")
     except Exception as e:
         print(f"Error processing {url}: {e}")
     return None
 
 def process_urls_from_json(input_json_file, output_json_file):
-    if not valid_proxies:
-        print("No valid proxies available. Skipping URL processing.")
-        return
+    print("🚀 Starting universal scraping process...")
 
     with open(input_json_file, 'r') as json_file:
         urls_data = json.load(json_file)
@@ -223,26 +430,44 @@ def process_urls_from_json(input_json_file, output_json_file):
     with open(output_json_file, 'w') as json_file:
         json_file.write('[]')  # Write an empty JSON array to clear the file
 
-    with ThreadPoolExecutor(max_workers=8) as executor:
+    total_urls = sum(len(urls) for urls in urls_data.values())
+    print(f"📊 Total URLs to process: {total_urls}")
+
+    with ThreadPoolExecutor(max_workers=3) as executor:  # Conservative worker count
         futures = []
         for website, urls in urls_data.items():
+            print(f"📰 Processing {len(urls)} URLs from {website}")
             for url in urls:
                 futures.append(executor.submit(process_url, url))
 
+        completed = 0
+        successful = 0
+        
         for future in as_completed(futures):
             try:
-                article_data = future.result(timeout=30)  # Set timeout for each future task
+                article_data = future.result(timeout=120)  # 2 minute timeout per URL
+                completed += 1
+                print(f"✅ Completed {completed}/{total_urls} URLs")
+                
                 if article_data:
+                    successful += 1
                     # Save the result incrementally
                     with open(output_json_file, 'r+') as json_file:
                         existing_results = json.load(json_file)
                         existing_results.append(article_data)
                         json_file.seek(0)
                         json.dump(existing_results, json_file, indent=4)
+                        print(f"🔥 Found fire incident: {article_data['Title'][:50]}...")
+                        
             except FuturesTimeoutError:
-                print(f"A URL processing timed out.")
+                print(f"⏰ A URL processing timed out.")
+                completed += 1
+            except Exception as e:
+                print(f"❌ Error processing URL: {e}")
+                completed += 1
 
-    print(f"Processing complete. Results saved to {output_json_file}")
+    print(f"🎉 Processing complete! Found {successful} fire incidents out of {total_urls} URLs")
+    print(f"📁 Results saved to {output_json_file}")
 
 if __name__ == "__main__":
     os.makedirs("all_jsons", exist_ok=True) 
