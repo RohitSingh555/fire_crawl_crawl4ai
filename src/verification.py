@@ -67,6 +67,77 @@ def verify_fire_incident(title, content, date, url, source):
         print(f"   ❌ Error with OpenAI API: {e}")
         return "no"
 
+def extract_location_info(title, content, url, source):
+    """Extract city, county, and state information from article content using AI"""
+    print(f"📍 Extracting location info: {title[:60]}...")
+    
+    truncated_content = content[:2000] if content else ""
+    
+    # Enhanced prompt for location extraction including state
+    prompt = (
+        f"Please extract the city, county, and state information from the following news article about a fire incident. "
+        "Focus on identifying the specific location where the fire occurred.\n\n"
+        "Guidelines:\n"
+        "1. Look for city names, town names, or municipality names\n"
+        "2. Look for county names (often mentioned as 'County')\n"
+        "3. Look for state names (full names or abbreviations like CA, NY, TX)\n"
+        "4. If multiple locations are mentioned, prioritize the one where the fire actually occurred\n"
+        "5. If no specific city/county/state is mentioned, respond with 'Unknown'\n"
+        "6. Return the information in this exact format: 'City: [city name], County: [county name], State: [state name]'\n\n"
+        f"Title: {title}\nContent: {truncated_content}\nURL: {url}\nSource: {source}\n\n"
+        "Please provide the location information in the specified format."
+    )
+
+    messages = [
+        {
+            "role": "system",
+            "content": "You are an AI tasked with extracting location information (city, county, and state) from news articles about fire incidents. Provide clear, accurate location data in the specified format."
+        },
+        {"role": "user", "content": prompt}
+    ]
+
+    try:
+        ai_response = client.chat.completions.create(
+            model='gpt-4o-mini',
+            messages=messages,
+            temperature=0,
+        )
+
+        answer = ai_response.choices[0].message.content.strip()
+        print(f"   📍 Location Response: {answer}")
+        
+        # Parse the response to extract city, county, and state
+        city = "--"
+        county = "--"
+        state = "--"
+        
+        if "City:" in answer and "County:" in answer and "State:" in answer:
+            try:
+                city_match = re.search(r'City:\s*([^,]+)', answer)
+                county_match = re.search(r'County:\s*([^,]+)', answer)
+                state_match = re.search(r'State:\s*([^,\n]+)', answer)
+                
+                if city_match:
+                    city = city_match.group(1).strip()
+                    if city.lower() == "unknown":
+                        city = "--"
+                if county_match:
+                    county = county_match.group(1).strip()
+                    if county.lower() == "unknown":
+                        county = "--"
+                if state_match:
+                    state = state_match.group(1).strip()
+                    if state.lower() == "unknown":
+                        state = "--"
+            except:
+                pass
+        
+        return city, county, state
+        
+    except Exception as e:
+        print(f"   ❌ Error extracting location: {e}")
+        return "--", "--", "--"
+
 def process_article(article_data):
     """Process a single article for fire incident verification"""
     try:
@@ -82,10 +153,13 @@ def process_article(article_data):
             print(f"⏭️  Skipping low fire score: {title[:50]}... (Score: {fire_score})")
             return None
         
-        # Verify with AI
+        # Step 1: Verify with AI
         verification_result = verify_fire_incident(title, content, date, url, source)
         
         if 'yes' in verification_result:
+            # Step 2: Extract location information
+            city, county, state = extract_location_info(title, content, url, source)
+            
             verified_article = {
                 'title': title,
                 'content': content[:1000],  # Truncate for CSV
@@ -94,9 +168,13 @@ def process_article(article_data):
                 'source': source,
                 'fire_related_score': fire_score,
                 'verification_result': verification_result,
+                'city': city,
+                'county': county,
+                'state': state,
                 'verified_at': datetime.now().isoformat()
             }
             print(f"   ✅ Verified fire incident: {title[:50]}...")
+            print(f"   📍 Location: {city}, {county}, {state}")
             return verified_article
         else:
             print(f"   ❌ Not a fire incident: {title[:50]}...")
@@ -155,7 +233,8 @@ def process_scraped_results(input_file, output_csv_file, output_json_file):
             with open(output_csv_file, 'w', newline='', encoding='utf-8') as csvfile:
                 fieldnames = [
                     'title', 'content', 'published_date', 'url', 'source', 
-                    'fire_related_score', 'verification_result', 'verified_at'
+                    'fire_related_score', 'verification_result', 'verified_at',
+                    'city', 'county', 'state'
                 ]
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 writer.writeheader()
@@ -242,6 +321,7 @@ def main():
             print(f"{i}. {article['title'][:80]}...")
             print(f"   Source: {article['source']}")
             print(f"   Date: {article['published_date']}")
+            print(f"   Location: {article['city']}, {article['county']}, {article['state']}")
             print(f"   Fire Score: {article['fire_related_score']:.2f}")
             print()
         
