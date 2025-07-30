@@ -10,7 +10,8 @@ import re
 import asyncio
 import requests
 import csv
-from datetime import datetime
+import pandas as pd
+from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -24,6 +25,22 @@ load_dotenv()
 
 # Initialize OpenAI client
 client = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
+
+def extract_channel(url):
+    """Extract channel name from URL"""
+    parsed_url = urlparse(url)
+    return parsed_url.netloc.split('.')[1]
+
+def parse_date(date_str):
+    """Parse date string to datetime object"""
+    try:
+        return datetime.strptime(date_str, "%d-%m-%Y")
+    except ValueError:
+        try:
+            from dateutil import parser
+            return parser.parse(date_str)
+        except:
+            return None
 
 def verify_fire_incident(title, content, date, url, source):
     """Verify if an article describes a real fire incident using AI"""
@@ -280,6 +297,129 @@ def find_latest_scraped_file():
     print(f"📁 Found latest scraped file: {latest_file}")
     return str(latest_file)
 
+def create_excel_and_upload(verified_articles, output_dir):
+    """Create JSON data and upload to bulk API"""
+    if not verified_articles:
+        print("❌ No verified articles to upload")
+        return
+    
+    print("\n📊 Preparing JSON data for bulk upload...")
+    
+    # Create timestamp for filenames
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    
+    # Prepare JSON data for bulk upload
+    json_data = {
+        "items": []
+    }
+    
+    for item in verified_articles:
+        # Parse the date to ISO format
+        date_str = item.get("published_date", "")
+        published_date = None
+        if date_str:
+            parsed_date = parse_date(date_str)
+            if parsed_date:
+                published_date = parsed_date.isoformat()
+        
+        # Create item structure matching the bulk API format
+        json_item = {
+            "title": str(item.get("title", "") or ""),
+            "content": str(item.get("content", "") or ""),
+            "published_date": published_date or "",
+            "url": str(item.get("url", "") or ""),
+            "source": str(item.get("source", "") or ""),
+            "fire_related_score": float(item.get("fire_related_score", 0.8)) if not pd.isna(item.get("fire_related_score", 0.8)) else 0.8,
+            "verification_result": str(item.get("verification_result", "yes") or "yes"),
+            "verified_at": str(item.get("verified_at", datetime.now().isoformat())),
+            "state": str(item.get("state", "") or ""),
+            "county": str(item.get("county", "") or ""),
+            "city": str(item.get("city", "") or ""),
+            "province": "",  # Server expects this field
+            "country": "USA",
+            "image_url": "",
+            "tags": "fire,emergency,news",
+            "reporter_name": "Web"
+        }
+        
+        # Only add latitude/longitude if they have valid values
+        if item.get("latitude") and pd.notna(item.get("latitude")):
+            json_item["latitude"] = float(item.get("latitude"))
+        if item.get("longitude") and pd.notna(item.get("longitude")):
+            json_item["longitude"] = float(item.get("longitude"))
+        json_data["items"].append(json_item)
+    
+    # Save JSON data locally
+    json_file = output_dir / f"bulk_upload_data_{timestamp}.json"
+    with open(json_file, 'w', encoding='utf-8') as f:
+        json.dump(json_data, f, indent=2, ensure_ascii=False)
+    
+    print(f"✅ JSON data saved as {json_file}")
+    
+    # Upload to bulk API
+    url = 'http://localhost:8000/api/fire-news/bulk-upload'
+    
+    print(f"🌐 Attempting to upload to: {url}")
+    print(f"📁 File: {json_file}")
+    print(f"📊 JSON data items: {len(json_data['items'])}")
+    
+    # Check if server is reachable first
+    server_available = True
+    try:
+        test_response = requests.get(url.replace('/api/fire-news/bulk-upload', '/'), timeout=5)
+        print(f"🔍 Server test response: {test_response.status_code}")
+    except requests.exceptions.ConnectionError:
+        print("❌ Cannot connect to server. Is the server running at http://localhost:8000?")
+        server_available = False
+    except Exception as e:
+        print(f"⚠️  Server test failed: {e}")
+        server_available = False
+    
+    if not server_available:
+        # Save JSON data locally as fallback
+        print(f"💾 Saved JSON data locally as backup: {json_file}")
+        print("💡 You can manually upload this data when the server is available")
+        return
+    
+    # Upload JSON data directly
+    try:
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        
+        print("📤 Sending JSON data to bulk upload endpoint...")
+        response = requests.post(url, json=json_data, headers=headers, timeout=30)
+        print(f"✅ POST request sent. Status code: {response.status_code}")
+        print(f"📤 Response: {response.text}")
+        print(f"📊 Sent {len(json_data['items'])} items in JSON data")
+        
+        if response.status_code == 200:
+            print("🎉 Bulk upload successful!")
+        else:
+            print(f"❌ Upload failed with status code: {response.status_code}")
+            print(f"📋 Response headers: {dict(response.headers)}")
+            print(f"📄 Response content: {response.text}")
+            
+            # Save failed request data for debugging
+            failed_data_file = output_dir / f"failed_bulk_upload_{timestamp}.json"
+            with open(failed_data_file, 'w', encoding='utf-8') as f:
+                json.dump({
+                    'request_data': json_data,
+                    'response_status': response.status_code,
+                    'response_text': response.text,
+                    'items_count': len(json_data['items'])
+                }, f, indent=2, ensure_ascii=False)
+            print(f"💾 Saved failed request data to: {failed_data_file}")
+            
+    except requests.exceptions.ConnectionError as e:
+        print(f"❌ Connection error: {e}")
+        print("💡 Make sure the server is running at http://localhost:8000")
+    except requests.exceptions.Timeout as e:
+        print(f"❌ Request timeout: {e}")
+    except Exception as e:
+        print(f"❌ Failed to send POST request: {e}")
+        print(f"🔍 Error type: {type(e).__name__}")
+
 def main():
     """Main function"""
     print("🔥 Fire Incident Verification Script")
@@ -335,6 +475,9 @@ def main():
             print(f"❌ Failed to send email: {e}")
             print("You can manually send the email by running:")
             print("python src/mailer.py")
+
+        # Create Excel file and upload to API
+        create_excel_and_upload(verified_articles, output_dir)
     else:
         print("\n❌ No verified fire incidents found. Email will not be sent.")
 
